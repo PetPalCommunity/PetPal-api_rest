@@ -19,3 +19,8 @@
 **Cuando** el veterinario dé clic a notificación de solicitud de servicios de cuidado.
 
 **Entonces** la aplicación mostrará una ventana emergente donde podrá ver los detalles de la solicitud enviada y deberá dar clic en “Aceptar” para agendar este servicio de cuidado de mascotas.
+
+Asignees
+
+- Samuel Cano
+- Ricolás Guerrero
