@@ -7,11 +7,6 @@ import com.petpal.petpalservice.model.entity.PetOwner;
 
 @Repository
 public interface PetOwnerRepository extends JpaRepository<PetOwner, Integer> {
-    default boolean existsByOwnerEmail(String email) {
-        return false;
-    }
-
-    default boolean existsByOwnerPhone(int phone) {
-        return false;
-    }
+    boolean existsByOwnerEmail(String ownerEmail);
+    boolean existsByOwnerPhone(int ownerPhone);
 }

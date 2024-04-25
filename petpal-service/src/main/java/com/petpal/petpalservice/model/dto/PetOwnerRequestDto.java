@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PetOwnerRequestDto {
-    private  String owner_name;
-    private int owner_age;
-    private String owner_sex;
-    private int owner_phone;
-    private String owner_email;
-    private String owner_password;
+    private  String ownerName;
+    private int ownerAge;
+    private String ownerSex;
+    private int ownerPhone;
+    private String ownerEmail;
+    private String ownerPassword;
 }

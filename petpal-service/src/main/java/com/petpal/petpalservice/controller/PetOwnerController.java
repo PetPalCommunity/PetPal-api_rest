@@ -1,10 +1,17 @@
 package com.petpal.petpalservice.controller;
 
 
+
+
 import com.petpal.petpalservice.model.dto.PetOwnerRequestDto;
 import com.petpal.petpalservice.model.entity.PetOwner;
 import com.petpal.petpalservice.service.PetOwnerService;
+import com.petpal.petpalservice.exception.MissingRequiredFieldException;
+import com.petpal.petpalservice.exception.DuplicateResourceException;
+import com.petpal.petpalservice.exception.InvalidEmailFormatException;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,12 +24,16 @@ public class PetOwnerController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<PetOwner> registerPetOwner(@RequestBody PetOwnerRequestDto dto) {
+    public ResponseEntity<?> registerPetOwner(@RequestBody PetOwnerRequestDto dto) {
         try {
             PetOwner created = service.createPetOwner(dto);
             return ResponseEntity.ok(created);
-        } catch (RuntimeException ex) {
-            return ResponseEntity.status(409).body(null); // 409 Conflict
+        } catch (MissingRequiredFieldException | InvalidEmailFormatException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (DuplicateResourceException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+        } catch (Exception ex) {
+            return new ResponseEntity<>("Error inesperado", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

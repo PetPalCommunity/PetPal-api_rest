@@ -16,23 +16,23 @@ public class PetOwner {
     @Column(name = "id_pet_owner")
     private int id;
     @Column(name = "name", nullable = false)
-    private String owner_name;
+    private String ownerName;
     @Column(name = "sex", nullable = false)
-    private String owner_sex;
+    private String ownerSex;
     @Column(name = "age", nullable = false)
-    private int owner_age;
+    private int ownerAge;
     @Column(name = "phone_numb", nullable = false, unique = true)
-    private int owner_phone;
+    private int ownerPhone;
     @Column(name = "email", nullable = false, unique = true)
-    private String owner_email;
+    private String ownerEmail;
     @Column(name = "password", nullable = false)
-    private String owner_password;
+    private String ownerPassword;
     @Column(name = "image")
-    private String owner_image;
+    private String ownerImage;
     @Column(name = "reputation")
-    private float owner_reputation;
+    private float ownerReputation;
     @Column(name = "followers")
-    private int followers;
+    private int ownerFollowers;
     @Column(name = "followed")
-    private int followed;
+    private int ownerFollowed;
 }
