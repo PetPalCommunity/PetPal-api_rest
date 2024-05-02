@@ -4,38 +4,37 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ManyToAny;
-
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.sql.Time;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Vet")
-
+@Table(name = "vets")
 public class Vet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idVet;
+    @Column(name = "id_vet")
+    private int id;
     @Column(name = "name", nullable = false)
-    private String name;
+    private String vetName;
+    @Column(name = "lastname", nullable = false)
+    private String vetLastname;
     @Column(name = "sex", nullable = false)
-    private String sex;
-    @Column(name = "phone_number", nullable = false)
-    private String phoneNumber;
-    @Column(name = "speciality", nullable = false)
-    private String speciality;
+    private String vetSex;
+    @Column(name = "phone_numb", nullable = false)
+    private int vetPhone;
+    @Column(name = "speciality", nullable = false, unique = true)
+    private String vetSpeciality;
     @Column(name = "reputation", nullable = false)
-    private BigDecimal reputation;
-    @Column(name = "license_number", nullable = false)
-    private String licenseNumber;
+    private float vetReputation;
+    @Column(name = "license_number", nullable = false, unique = true)
+    private int vetLicenseNumber;
     @Column(name = "image", nullable = false)
-    private String image;
-    @Column(name = "email", nullable = false)
-    private String email;
-    @Column(name = "password", nullable = false)
-    private String password;
+    private String vetImage;
+    @Column(name = "location", nullable = false)
+    private String vetLocation;
+    @Column(name = "email", nullable = false, unique = true)
+    private String vetEmail;
+    @Column(name = "password", nullable = false, unique = true)
+    private String vetPassword;
 }
