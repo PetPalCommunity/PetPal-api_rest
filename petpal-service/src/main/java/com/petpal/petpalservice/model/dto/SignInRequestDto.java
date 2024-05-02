@@ -1,13 +1,14 @@
 package com.petpal.petpalservice.model.dto;
 
-public class SignInRequestDto {
-    private String ownerEmail;
-    private String ownerPassword;
+import lombok.Getter;
 
-    public String getOwnerEmail() {
-        return ownerEmail;
-    }
-    public String getOwnerPassword() {
-        return ownerPassword;
-    }
+public class SignInRequestDto {
+    @Getter
+    private String ownerEmail;
+    @Getter
+    private String ownerPassword;
+    @Getter
+    private String vetEmail;
+    @Getter
+    private String vetPassword;
 }
