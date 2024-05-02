@@ -54,13 +54,4 @@ public class VetService {
 
         return repository.save(vet);
     }
-
-    public Vet validateSignIn(SignInRequestDto dto) {
-        Vet vet = repository.findByVetEmail(dto.getVetEmail());
-
-        if (vet == null || !passwordEncoder.matches(dto.getVetPassword(), vet.getVetPassword())) {
-            throw new InvalidCredentialsException("Invalid email or password");
-        }
-        return vet;
-    }
 }

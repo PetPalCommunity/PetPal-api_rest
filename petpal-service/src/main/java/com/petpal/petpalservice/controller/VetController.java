@@ -20,10 +20,4 @@ public class VetController {
         Vet created = service.createVet(dto);
         return ResponseEntity.ok(created);
     }
-
-    @PostMapping("/signin")
-    public ResponseEntity<Vet> signIn(@RequestBody SignInRequestDto dto) {
-        Vet validated = service.validateSignIn(dto);
-        return ResponseEntity.ok(validated);
-    }
 }
