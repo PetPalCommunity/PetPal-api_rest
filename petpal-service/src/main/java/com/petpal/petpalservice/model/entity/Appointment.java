@@ -28,7 +28,7 @@ public class Appointment {
     private Payment payment;
     @ManyToOne
     @JoinColumn(name = "idPet", nullable = false)
-    private Pet idPet;
+    private Pet pet;
     @Column(name = "date", nullable = false, unique = true)
     private Date date;
     @Column(name = "time", nullable = false, unique = true)
