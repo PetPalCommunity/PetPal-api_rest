@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ManyToAny;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -17,14 +18,17 @@ import java.sql.Time;
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idAppointment")
-    private int id;
-    @Column(name = "idVet", nullable = false)
-    private int id_vet;
-    @Column(name = "idPet", nullable = false)
-    private int id_pet;
-    @Column(name = "idPayment", nullable = false)
-    private int id_payment;
+    @Column(name = "id_appointment")
+    private int idAppointment;
+    @ManyToOne
+    @JoinColumn(name = "idVet", nullable = false)
+    private Vet vet;
+    @OneToOne
+    @JoinColumn(name = "idPayment", nullable = false)
+    private Payment payment;
+    @ManyToOne
+    @JoinColumn(name = "idPet", nullable = false)
+    private Pet idPet;
     @Column(name = "date", nullable = false, unique = true)
     private Date date;
     @Column(name = "time", nullable = false, unique = true)
