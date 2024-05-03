@@ -6,6 +6,7 @@ import com.petpal.petpalservice.exception.ResourceNotFoundException;
 import com.petpal.petpalservice.mapper.PetMapper;
 import com.petpal.petpalservice.model.dto.PetRequestDto;
 import com.petpal.petpalservice.model.dto.PetResponseDto;
+import com.petpal.petpalservice.model.dto.petUpdateRequestDto;
 import com.petpal.petpalservice.model.entity.Pet;
 import com.petpal.petpalservice.model.entity.PetOwner;
 import com.petpal.petpalservice.repository.PetRepository;
@@ -42,8 +43,38 @@ public class PetService {
     }
 
     @Transactional
-    public void deletePet(int petId) {
-        petRepository.deleteById(petId);
+    public void deletePet(int ownerId, int id) {
+        Pet pet = petRepository.findByPetOwnerIdAndPetId(ownerId,id);
+                /* .orElseThrow(()-> new ResourceNotFoundException("Mascota no encontrada:"+id+" del dueño:"+ownerId)); */  
+        petRepository.delete(pet);
+    }
+
+    @Transactional
+    public PetResponseDto updatePet(int ownerId, int id, petUpdateRequestDto dto){
+        Pet pet = petRepository.findByPetOwnerIdAndPetId(ownerId,id);
+                /* .orElseThrow(()-> new ResourceNotFoundException("Cuesta no encontrada con el numero:"+id)); */
+        if (dto.getPetName() != null) {
+            pet.setPetName(dto.getPetName());
+        }
+        if (dto.getPetSpecies() != null) {
+            pet.setPetSpecies(dto.getPetSpecies());
+        }
+        if (dto.getPetBreed() != null) {
+            pet.setPetBreed(dto.getPetBreed());
+        }
+        if (dto.getPetAge() != 0) {
+            pet.setPetAge(dto.getPetAge());
+        }
+        if (dto.getPetSex() != null) {
+            pet.setPetSex(dto.getPetSex());
+        }
+        if (dto.getImage() != null) {
+            pet.setImage(dto.getImage());
+        }
+
+        pet = petRepository.save(pet);
+
+        return  mapper.entityToDto(pet);
     }
 
     @Transactional(readOnly =true)

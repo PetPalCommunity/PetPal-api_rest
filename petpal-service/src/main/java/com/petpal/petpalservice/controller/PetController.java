@@ -2,6 +2,7 @@ package com.petpal.petpalservice.controller;
 
 import com.petpal.petpalservice.model.dto.PetRequestDto;
 import com.petpal.petpalservice.model.dto.PetResponseDto;
+import com.petpal.petpalservice.model.dto.petUpdateRequestDto;
 import com.petpal.petpalservice.service.PetService;
 
 import lombok.AllArgsConstructor;
@@ -39,10 +40,17 @@ public class PetController {
         PetResponseDto pet = service.getPetById(ownerId,id);
         return new ResponseEntity<>(pet, HttpStatus.OK);
     }
+
+    @PutMapping("/{ownerId}/{id}")
+    public ResponseEntity<PetResponseDto> updateAccount(@PathVariable int ownerId,@PathVariable int id,
+                                                            @Validated @RequestBody petUpdateRequestDto accountDTO) {
+        PetResponseDto updatedPet = service.updatePet(ownerId,id, accountDTO);
+        return new ResponseEntity<>(updatedPet, HttpStatus.OK);
+    }
     
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAccount(@PathVariable int id) {
-        service.deletePet(id);
+    @DeleteMapping("/{ownerId}/{id}")
+    public ResponseEntity<Void> deleteAccount(@PathVariable int ownerId,@PathVariable int id) {
+        service.deletePet(ownerId,id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
