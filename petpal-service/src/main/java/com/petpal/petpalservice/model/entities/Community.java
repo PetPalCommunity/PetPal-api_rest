@@ -32,7 +32,7 @@ public class Community {
     )
     Set<Tag> tags = new HashSet<>();
 
-    @OneToMany(mappedBy = "communityUser")
+    @OneToMany(mappedBy = "community")
     private Set<CommunityUser> communityUsers;
 
 	public Long getId() {

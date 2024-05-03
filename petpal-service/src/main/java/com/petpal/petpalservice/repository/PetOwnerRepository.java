@@ -5,9 +5,9 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.petpal.petpalservice.model.entities.Community;
+import com.petpal.petpalservice.model.entities.PetOwner;
 
-public interface PetOwnerRepository extends JpaRepository<Community, Long>{
-    Optional <Community> findPetOwnerByUserName(String userName);
+public interface PetOwnerRepository extends JpaRepository<PetOwner, Long>{
+    Optional <PetOwner> findPetOwnerByUserName(String userName);
 }
 

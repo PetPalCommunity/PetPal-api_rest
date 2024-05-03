@@ -1,5 +1,6 @@
 package com.petpal.petpalservice.service;
 
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.petpal.petpalservice.exception.ResourceNotFoundException;
@@ -9,10 +10,13 @@ import com.petpal.petpalservice.model.DTO.CommunityResponseDTO;
 import com.petpal.petpalservice.model.entities.Community;
 import com.petpal.petpalservice.repository.CommunityRepository;
 
+import lombok.AllArgsConstructor;
 
+@Service
+@AllArgsConstructor
 public class CommunityService {
-    private CommunityRepository communityRepository;
-    private final CommunityMapper communityMapper = new CommunityMapper();
+    private final CommunityRepository communityRepository;
+    private final CommunityMapper communityMapper;
     //task1 get comunidad
     @Transactional(readOnly = true)
     public CommunityResponseDTO getCommunityByName(String name){

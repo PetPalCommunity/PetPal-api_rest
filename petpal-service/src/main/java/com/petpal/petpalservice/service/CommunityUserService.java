@@ -1,5 +1,6 @@
 package com.petpal.petpalservice.service;
 
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.petpal.petpalservice.mapper.CommunityUserMapper;
@@ -8,6 +9,10 @@ import com.petpal.petpalservice.model.DTO.CommunityUserResponseDTO;
 import com.petpal.petpalservice.model.entities.CommunityUser;
 import com.petpal.petpalservice.repository.CommunityUserRepository;
 
+import lombok.AllArgsConstructor;
+
+@Service
+@AllArgsConstructor
 public class CommunityUserService {
     private CommunityUserRepository communityUserRepository;
     private final CommunityUserMapper communityUserMapper = new CommunityUserMapper();

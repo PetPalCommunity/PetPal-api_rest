@@ -12,6 +12,6 @@ public class CommunityRequestDTO {
     @NotBlank(message = "Ingresa un nombre")
     private String name;
     @NotBlank(message = "Ingresa una descripcion")
-    private String descripcion;
+    private String description;
 
 }
