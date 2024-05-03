@@ -1,35 +1,23 @@
 package com.petpal.petpalservice.model.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Tag
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "tags")
-public class Tag {
+@Table(name = "petOwners")
+public class PetOwner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tag_id", nullable = false)
+    @Column(name = "petOwner_id", nullable = false)
     private Long id;
-    
-    @ManyToMany(mappedBy = "tags")
-    private Set<Community> communities = new HashSet<>();
-
-
-    @Column(name = "name")
-    private String name;
-    
+    @Column(name = "userName")
+    private String userName;
 }
