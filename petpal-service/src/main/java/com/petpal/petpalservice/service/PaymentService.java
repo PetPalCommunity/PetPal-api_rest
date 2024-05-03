@@ -30,7 +30,7 @@ public class PaymentService {
     }
 
     public Payment createPayment(PaymentRequestDto paymentDto){
-        Optional<Appointment> optionalAppointment = appointmentRepository.findById((long) paymentDto.getIdAppointment());
+        Optional<Appointment> optionalAppointment = appointmentRepository.findByIdAppointment(paymentDto.getIdAppointment());
         if (optionalAppointment.isEmpty()) {
             throw new NotFoundException("Appointment not found");
         }
