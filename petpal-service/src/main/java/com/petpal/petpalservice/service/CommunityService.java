@@ -9,7 +9,7 @@ import com.petpal.petpalservice.model.DTO.CommunityRequestDTO;
 import com.petpal.petpalservice.model.DTO.CommunityResponseDTO;
 import com.petpal.petpalservice.model.entities.Community;
 import com.petpal.petpalservice.repository.CommunityRepository;
-
+import java.util.List;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -17,6 +17,11 @@ import lombok.AllArgsConstructor;
 public class CommunityService {
     private final CommunityRepository communityRepository;
     private final CommunityMapper communityMapper;
+    @Transactional(readOnly = true)
+    public List<CommunityResponseDTO> getAllCommunities(){
+        List<Community> communities = communityRepository.findAll();
+        return communityMapper.convertToListDTO(communities);
+    }
     //task1 get comunidad
     @Transactional(readOnly = true)
     public CommunityResponseDTO getCommunityByName(String name){
@@ -30,6 +35,21 @@ public class CommunityService {
         Community community = communityMapper.convertToEntity(communityRequestDTO);
         community.setCountFollowers(0L);
         communityRepository.save(community);
+        return communityMapper.convertToDTO(community);
+    }
+    @Transactional
+    public void deleteCommunity(Long id){
+        communityRepository.deleteById(id);
+    }
+
+    @Transactional
+    public CommunityResponseDTO updateCommunity(Long id, CommunityRequestDTO communityRequestDTO){
+        Community community = communityRepository.findById(id)
+            .orElseThrow(()->new ResourceNotFoundException("La comunidad no existe"));
+        community.setName("sam");
+        community.setDescription("mas");
+        community.setCountFollowers(3L);
+        community = communityRepository.save(community);
         return communityMapper.convertToDTO(community);
     }
 }

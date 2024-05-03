@@ -13,5 +13,7 @@ public class CommunityRequestDTO {
     private String name;
     @NotBlank(message = "Ingresa una descripcion")
     private String description;
+    @NotBlank(message = "Ingresa una cantidad")
+    private Long countFollowers;
 
 }

@@ -18,9 +18,9 @@ public class Community {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "community_id", nullable = false)
     private Long id;
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
-    @Column(name = "description", nullable = false)
+    @Column(name = "description")
     private String description;
     @Column(name = "countFollowers")
     private Long countFollowers;
