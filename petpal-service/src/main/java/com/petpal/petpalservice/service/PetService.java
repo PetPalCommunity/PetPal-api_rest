@@ -37,22 +37,22 @@ public class PetService {
 
     @Transactional(readOnly = true)
     public PetResponseDto getPetById(int ownerId, int id) {
-        Pet pet = petRepository.findByPetOwnerIdAndPetId(ownerId,id);
-               /*  .orElseThrow(()-> new ResourceNotFoundException("Mascota no encontrada:"+id+" del dueño:"+ownerId)); */
+        Pet pet = petRepository.findByPetOwnerIdAndPetId(ownerId,id)
+                 .orElseThrow(()-> new ResourceNotFoundException("La mascota con el id "+id+" no le pertenece al dueño co el id "+ownerId)); 
         return mapper.entityToDto(pet);
     }
 
     @Transactional
     public void deletePet(int ownerId, int id) {
-        Pet pet = petRepository.findByPetOwnerIdAndPetId(ownerId,id);
-                /* .orElseThrow(()-> new ResourceNotFoundException("Mascota no encontrada:"+id+" del dueño:"+ownerId)); */  
+        Pet pet = petRepository.findByPetOwnerIdAndPetId(ownerId,id)
+                    .orElseThrow(()-> new ResourceNotFoundException("La mascota con el id "+id+" no puede ser eliminada por dueño con el id "+ownerId)); 
         petRepository.delete(pet);
     }
 
     @Transactional
     public PetResponseDto updatePet(int ownerId, int id, petUpdateRequestDto dto){
-        Pet pet = petRepository.findByPetOwnerIdAndPetId(ownerId,id);
-                /* .orElseThrow(()-> new ResourceNotFoundException("Cuesta no encontrada con el numero:"+id)); */
+        Pet pet = petRepository.findByPetOwnerIdAndPetId(ownerId,id)
+                    .orElseThrow(()-> new ResourceNotFoundException("La mascota con el id "+id+" no puede ser editada por el dueño con el id "+ownerId));        
         if (dto.getPetName() != null) {
             pet.setPetName(dto.getPetName());
         }
@@ -79,7 +79,8 @@ public class PetService {
 
     @Transactional(readOnly =true)
     public List<PetResponseDto> getPetsByOwnerId(int ownerId) {
-        List<Pet> pets = petRepository.findByPetOwnerId(ownerId);
+        List<Pet> pets = petRepository.findByPetOwnerId(ownerId)
+                    .orElseThrow(()-> new ResourceNotFoundException("El dueño "+ownerId+" no tiene mascotas")); 
         return mapper.entityToListDto(pets);
     }
 }
