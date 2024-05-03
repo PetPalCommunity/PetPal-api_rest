@@ -10,4 +10,5 @@ public interface PetOwnerRepository extends JpaRepository<PetOwner, Integer> {
     boolean existsByOwnerEmail(String ownerEmail);
     boolean existsByOwnerPhone(int ownerPhone);
     PetOwner findByOwnerEmail(String ownerEmail);
+    PetOwner findByOwnerEmailAndOwnerPhone(String ownerEmail, int ownerPhone);
 }

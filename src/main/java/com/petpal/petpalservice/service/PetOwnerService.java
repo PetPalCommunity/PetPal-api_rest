@@ -6,6 +6,7 @@ import com.petpal.petpalservice.exception.InvalidEmailFormatException;
 import com.petpal.petpalservice.exception.MissingRequiredFieldException;
 import com.petpal.petpalservice.exception.InvalidCredentialsException;
 import com.petpal.petpalservice.model.dto.PetOwnerRequestDto;
+import com.petpal.petpalservice.model.dto.RecoverPasswordDto;
 import com.petpal.petpalservice.model.dto.SignInRequestDto;
 import com.petpal.petpalservice.model.entity.PetOwner;
 import com.petpal.petpalservice.repository.PetOwnerRepository;
@@ -59,5 +60,15 @@ public class PetOwnerService {
             throw new InvalidCredentialsException("Invalid email or password");
         }
         return petOwner;
+    }
+
+    public void recoverPetOwnerPassword(RecoverPasswordDto dto) {
+        PetOwner petOwner = repository.findByOwnerEmailAndOwnerPhone(dto.getOwnerEmail(), dto.getOwnerPhone());
+        if (petOwner == null) {
+            throw new InvalidCredentialsException("Invalid email or phone number");
+        }
+        petOwner.setOwnerPassword(passwordEncoder.encode(dto.getNewPassword()));
+        repository.save(petOwner);
+        System.out.println("Password updated successfully for Owner: " + petOwner.getOwnerName());
     }
 }

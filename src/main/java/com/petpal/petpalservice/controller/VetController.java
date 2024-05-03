@@ -1,5 +1,6 @@
 package com.petpal.petpalservice.controller;
 
+import com.petpal.petpalservice.model.dto.RecoverPasswordDto;
 import com.petpal.petpalservice.model.dto.VetRequestDto;
 import com.petpal.petpalservice.model.entity.Vet;
 import com.petpal.petpalservice.service.VetService;
@@ -34,5 +35,11 @@ public class VetController {
     public ResponseEntity<List<Vet>> searchVets(@RequestBody VetSearchDto searchDto) {
         List<Vet> vets = service.searchVets(searchDto.getVetName(), searchDto.getVetLastname(), searchDto.getVetLocation());
         return ResponseEntity.ok(vets);
+    }
+
+    @PostMapping("/recoverPassword")
+    public ResponseEntity<Void> recoverVetPassword(@RequestBody RecoverPasswordDto dto) {
+        service.recoverVetPassword(dto);
+        return ResponseEntity.ok().build();
     }
 }

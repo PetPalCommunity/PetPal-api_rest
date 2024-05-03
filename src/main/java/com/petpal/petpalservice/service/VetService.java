@@ -4,6 +4,7 @@ import com.petpal.petpalservice.exception.DuplicateResourceException;
 import com.petpal.petpalservice.exception.InvalidEmailFormatException;
 import com.petpal.petpalservice.exception.MissingRequiredFieldException;
 import com.petpal.petpalservice.exception.InvalidCredentialsException;
+import com.petpal.petpalservice.model.dto.RecoverPasswordDto;
 import com.petpal.petpalservice.model.dto.VetRequestDto;
 import com.petpal.petpalservice.model.dto.SignInRequestDto;
 import com.petpal.petpalservice.model.entity.Vet;
@@ -67,6 +68,16 @@ public class VetService {
     }
     public List<Vet> searchVets(String vetName, String vetLastname, String vetLocation) {
         return repository.findByVetNameAndVetLastnameAndVetLocation(vetName, vetLastname, vetLocation);
+    }
+
+    public void recoverVetPassword(RecoverPasswordDto dto) {
+        Vet vet = repository.findByVetEmailAndVetPhone(dto.getVetEmail(), dto.getVetPhone());
+        if (vet == null) {
+            throw new InvalidCredentialsException("Invalid email or phone number");
+        }
+        vet.setVetPassword(passwordEncoder.encode(dto.getNewPassword()));
+        repository.save(vet);
+        System.out.println("Password updated successfully for Vet: " + vet.getVetName());
     }
 
 }

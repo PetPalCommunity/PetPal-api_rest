@@ -21,5 +21,7 @@ public interface VetRepository extends JpaRepository<Vet, Integer> {
             +
             "and (:vetLocation is null or v.vetLocation = :vetLocation)")
     List<Vet> findByVetNameAndVetLastnameAndVetLocation(String vetName, String vetLastname, String vetLocation);
+
+    Vet findByVetEmailAndVetPhone(String vetEmail, int vetPhone);
 }
 

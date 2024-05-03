@@ -1,6 +1,7 @@
 package com.petpal.petpalservice.controller;
 
 import com.petpal.petpalservice.model.dto.PetOwnerRequestDto;
+import com.petpal.petpalservice.model.dto.RecoverPasswordDto;
 import com.petpal.petpalservice.model.dto.SignInRequestDto;
 import com.petpal.petpalservice.model.entity.PetOwner;
 import com.petpal.petpalservice.service.PetOwnerService;
@@ -26,5 +27,11 @@ public class PetOwnerController {
     public ResponseEntity<PetOwner> signIn(@RequestBody SignInRequestDto dto) {
         PetOwner validated = service.validateSignIn(dto);
         return ResponseEntity.ok(validated);
+    }
+
+    @PostMapping("/recoverPassword")
+    public ResponseEntity<Void> recoverPetOwnerPassword(@RequestBody RecoverPasswordDto dto) {
+        service.recoverPetOwnerPassword(dto);
+        return ResponseEntity.ok().build();
     }
 }
