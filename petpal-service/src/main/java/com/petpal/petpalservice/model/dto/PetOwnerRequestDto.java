@@ -16,3 +16,4 @@ public class PetOwnerRequestDto {
     private String ownerEmail;
     private String ownerPassword;
 }
+

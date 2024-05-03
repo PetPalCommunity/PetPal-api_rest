@@ -29,7 +29,7 @@ public class Vet {
     private float vetReputation;
     @Column(name = "license_number", nullable = false, unique = true)
     private int vetLicenseNumber;
-    @Column(name = "image", nullable = false)
+    @Column(name = "image")
     private String vetImage;
     @Column(name = "location", nullable = false)
     private String vetLocation;
