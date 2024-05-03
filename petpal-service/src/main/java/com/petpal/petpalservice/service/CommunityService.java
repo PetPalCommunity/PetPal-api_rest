@@ -33,7 +33,7 @@ public class CommunityService {
     @Transactional
     public CommunityResponseDTO createCommunity(CommunityRequestDTO communityRequestDTO){
         Community community = communityMapper.convertToEntity(communityRequestDTO);
-        community.setCountFollowers(0L);
+        // community.setCountFollowers(0L);
         communityRepository.save(community);
         return communityMapper.convertToDTO(community);
     }
@@ -46,9 +46,9 @@ public class CommunityService {
     public CommunityResponseDTO updateCommunity(Long id, CommunityRequestDTO communityRequestDTO){
         Community community = communityRepository.findById(id)
             .orElseThrow(()->new ResourceNotFoundException("La comunidad no existe"));
-        community.setName("sam");
-        community.setDescription("mas");
-        community.setCountFollowers(3L);
+        community.setName(communityRequestDTO.getName());
+        community.setDescription(communityRequestDTO.getDescription());
+        community.setCountFollowers(communityRequestDTO.getCountFollowers());
         community = communityRepository.save(community);
         return communityMapper.convertToDTO(community);
     }

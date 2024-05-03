@@ -1,6 +1,7 @@
 package com.petpal.petpalservice.model.DTO;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ public class CommunityRequestDTO {
     private String name;
     @NotBlank(message = "Ingresa una descripcion")
     private String description;
-    @NotBlank(message = "Ingresa una cantidad")
+    @NotNull(message = "Ingresa una cantidad")
     private Long countFollowers;
 
 }

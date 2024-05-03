@@ -22,7 +22,7 @@ public class Community {
     private String name;
     @Column(name = "description")
     private String description;
-    @Column(name = "countFollowers")
+    @Column(name = "count_followers")
     private Long countFollowers;
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
