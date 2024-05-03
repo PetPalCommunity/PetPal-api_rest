@@ -3,7 +3,6 @@ package com.petpal.petpalservice.service;
 import com.petpal.petpalservice.exception.DuplicateResourceException;
 import com.petpal.petpalservice.exception.InvalidEmailFormatException;
 import com.petpal.petpalservice.exception.MissingRequiredFieldException;
-import com.petpal.petpalservice.exception.InvalidCredentialsException;
 import com.petpal.petpalservice.model.dto.VetRequestDto;
 import com.petpal.petpalservice.model.entity.Vet;
 import com.petpal.petpalservice.repository.VetRepository;

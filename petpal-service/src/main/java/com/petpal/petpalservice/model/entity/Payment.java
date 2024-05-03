@@ -19,6 +19,9 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idPayment;
+    @OneToOne
+    @JoinColumn(name = "idAppointment", nullable = false)
+    private Appointment appointment;
     @Column(name = "amount", nullable = false)
     private int amount;
     @Column(name = "description", nullable = false)

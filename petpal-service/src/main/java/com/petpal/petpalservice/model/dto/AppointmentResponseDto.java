@@ -20,4 +20,5 @@ public class AppointmentResponseDto{
     private Date date;
     private Time time;
     private String reason;
+    private boolean confirm;
 }

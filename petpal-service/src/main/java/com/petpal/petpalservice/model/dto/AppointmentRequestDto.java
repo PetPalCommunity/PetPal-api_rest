@@ -17,12 +17,10 @@ import java.sql.Time;
 @AllArgsConstructor
 
 public class AppointmentRequestDto{
-    @NotBlank(message = "El nombre del veterinario no puede estar vacio")
-    private String vetName;
-    @NotBlank(message = "El monto del pago no puede estar vacio")
-    private int paymentAmount;
-    @NotBlank(message = "El nombre de la mascota no puede estar vacio")
-    private String petName;
+    @NotBlank(message = "El id del veterinario no puede estar vacio")
+    private int idVet;
+    @NotBlank(message = "El id de la mascota no puede estar vacio")
+    private int idPet;
     @NotBlank(message = "La fecha no puede estar vacia")
     @DateTimeFormat
     @Future
@@ -31,5 +29,6 @@ public class AppointmentRequestDto{
     private Time time;
     @NotBlank(message = "La razon de la consulta no puede estar vacia")
     private String reason;
+    private boolean confirm;
 }
 

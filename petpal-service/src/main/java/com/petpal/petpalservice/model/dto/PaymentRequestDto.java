@@ -13,6 +13,8 @@ import java.sql.Date;
 @AllArgsConstructor
 
 public class PaymentRequestDto {
+    @NotBlank(message = "El id de la cita no puede estar vacio")
+    private int idAppointment;
     @NotBlank(message = "El monto del pago no puede estar vacio")
     private int amount;
     @NotBlank(message = "La razon del pago no puede estar vacia")

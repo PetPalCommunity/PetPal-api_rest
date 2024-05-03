@@ -18,14 +18,10 @@ import java.sql.Time;
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_appointment")
     private int idAppointment;
     @ManyToOne
     @JoinColumn(name = "idVet", nullable = false)
     private Vet vet;
-    @OneToOne
-    @JoinColumn(name = "idPayment", nullable = false)
-    private Payment payment;
     @ManyToOne
     @JoinColumn(name = "idPet", nullable = false)
     private Pet pet;
@@ -35,4 +31,6 @@ public class Appointment {
     private Time time;
     @Column(name = "reason", nullable = false)
     private String reason;
+    @Column(name = "confirm")
+    private boolean confirm;
 }
