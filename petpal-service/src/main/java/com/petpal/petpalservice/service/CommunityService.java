@@ -9,6 +9,8 @@ import com.petpal.petpalservice.model.DTO.CommunityRequestDTO;
 import com.petpal.petpalservice.model.DTO.CommunityResponseDTO;
 import com.petpal.petpalservice.model.entities.Community;
 import com.petpal.petpalservice.repository.CommunityRepository;
+
+import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
 
@@ -33,7 +35,8 @@ public class CommunityService {
     @Transactional
     public CommunityResponseDTO createCommunity(CommunityRequestDTO communityRequestDTO){
         Community community = communityMapper.convertToEntity(communityRequestDTO);
-        // community.setCountFollowers(0L);
+        community.setTags(communityRequestDTO.getTags());
+        community.setCreationDate(LocalDate.now());
         communityRepository.save(community);
         return communityMapper.convertToDTO(community);
     }
@@ -41,7 +44,10 @@ public class CommunityService {
     public void deleteCommunity(Long id){
         communityRepository.deleteById(id);
     }
-
+    @Transactional
+    public void deleteAllCommunities(){
+        communityRepository.deleteAll();
+    }
     @Transactional
     public CommunityResponseDTO updateCommunity(Long id, CommunityRequestDTO communityRequestDTO){
         Community community = communityRepository.findById(id)
@@ -49,6 +55,9 @@ public class CommunityService {
         community.setName(communityRequestDTO.getName());
         community.setDescription(communityRequestDTO.getDescription());
         community.setCountFollowers(communityRequestDTO.getCountFollowers());
+        // community.setTags(String.join(", ", communityRequestDTO.getTags()));
+        community.setTags(communityRequestDTO.getTags());
+        community.setCreationDate(LocalDate.now());
         community = communityRepository.save(community);
         return communityMapper.convertToDTO(community);
     }

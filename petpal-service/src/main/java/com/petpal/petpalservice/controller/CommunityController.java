@@ -49,6 +49,11 @@ public class CommunityController {
         communityService.deleteCommunity(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    @DeleteMapping("/")
+    public ResponseEntity<CommunityResponseDTO>deleteAllCommunities(){
+        communityService.deleteAllCommunities();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
     @PutMapping("/{id}")
     public ResponseEntity<CommunityResponseDTO> updateCommunity(@PathVariable Long id, @Validated @RequestBody CommunityRequestDTO communityRequestDTO){
         CommunityResponseDTO updatedCommunity = communityService.updateCommunity(id, communityRequestDTO);

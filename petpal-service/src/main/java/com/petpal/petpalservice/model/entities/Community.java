@@ -1,11 +1,14 @@
 package com.petpal.petpalservice.model.entities;
-import java.util.HashSet;
+import java.time.LocalDate;
+import java.util.List;
+// import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 
 @Data
@@ -18,21 +21,36 @@ public class Community {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "community_id", nullable = false)
     private Long id;
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
     @Column(name = "description")
     private String description;
     @Column(name = "count_followers")
     private Long countFollowers;
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-        name = "Community_Tag",
-        joinColumns = {@JoinColumn(name = "community_id")},
-        inverseJoinColumns = {@JoinColumn(name = "tag_id")}
-    )
-    Set<Tag> tags = new HashSet<>();
+    @Column(name = "tags")
+    // String tags;
+    @ElementCollection
+    List<String> tags;
+    @Column(name="creation_date")
+    LocalDate creationDate;
 
-    @OneToMany(mappedBy = "community")
+	public LocalDate getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(LocalDate creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public List<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<String>tags) {
+		this.tags = tags;
+	}
+
+	@OneToMany(mappedBy = "community")
     private Set<CommunityUser> communityUsers;
 
 	public Long getId() {
@@ -65,14 +83,6 @@ public class Community {
 
 	public void setCountFollowers(Long countFollowers) {
 		this.countFollowers = countFollowers;
-	}
-
-	public Set<Tag> getTags() {
-		return tags;
-	}
-
-	public void setTags(Set<Tag> tags) {
-		this.tags = tags;
 	}
 
 	public Set<CommunityUser> getCommunityUsers() {
