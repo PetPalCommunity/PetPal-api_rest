@@ -9,4 +9,5 @@ import com.petpal.petpalservice.model.entities.Community;
 
 public interface CommunityRepository extends JpaRepository<Community, Long>{
     Optional <Community> findCommunityByName(String name);
+  Optional <Community> findById(Long id);
 }

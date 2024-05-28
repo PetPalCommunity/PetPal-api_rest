@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.petpal.petpalservice.model.DTO.CommunityRequestDTO;
 import com.petpal.petpalservice.model.DTO.CommunityResponseDTO;
+import com.petpal.petpalservice.model.DTO.CommunityUserRequestDTO;
+import com.petpal.petpalservice.model.DTO.CommunityUserResponseDTO;
 import com.petpal.petpalservice.service.CommunityService;
+import com.petpal.petpalservice.service.CommunityUserService;
 
 import lombok.AllArgsConstructor;
 
@@ -25,39 +28,49 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/community")
 @AllArgsConstructor
 public class CommunityController {
-    private final CommunityService communityService;
-    //task1
-    @GetMapping
-    public ResponseEntity<List<CommunityResponseDTO>> getAllCommunities(){
-        List<CommunityResponseDTO> communities = communityService.getAllCommunities();
-        return new ResponseEntity<>(communities, HttpStatus.OK);
-    }
-    @GetMapping("/{name}")
-    public ResponseEntity<CommunityResponseDTO> getCommunitytByName(@PathVariable String name){
-        CommunityResponseDTO community = communityService.getCommunityByName(name);
-        return new ResponseEntity<>(community, HttpStatus.OK);
-    }
-    //task3
-    @PostMapping
-    public ResponseEntity<CommunityResponseDTO> createCommunity(
-        @Validated @RequestBody CommunityRequestDTO communityRequestDTO){
-        CommunityResponseDTO createdCommunity = communityService.createCommunity(communityRequestDTO);
-        return new ResponseEntity<>(createdCommunity, HttpStatus.CREATED);
-    }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<CommunityResponseDTO> deleteCommunity(@PathVariable Long id){
-        communityService.deleteCommunity(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-    @DeleteMapping("/")
-    public ResponseEntity<CommunityResponseDTO>deleteAllCommunities(){
-        communityService.deleteAllCommunities();
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-    @PutMapping("/{id}")
-    public ResponseEntity<CommunityResponseDTO> updateCommunity(@PathVariable Long id, @Validated @RequestBody CommunityRequestDTO communityRequestDTO){
-        CommunityResponseDTO updatedCommunity = communityService.updateCommunity(id, communityRequestDTO);
-        return new ResponseEntity<>(updatedCommunity, HttpStatus.OK);
-    }
+  private final CommunityService communityService;
+  private final CommunityUserService communityUserService;
+  //task1
+  @GetMapping
+  public ResponseEntity<List<CommunityResponseDTO>> getAllCommunities(){
+    List<CommunityResponseDTO> communities = communityService.getAllCommunities();
+    return new ResponseEntity<>(communities, HttpStatus.OK);
+  }
+
+  @GetMapping("/{name}")
+  public ResponseEntity<CommunityResponseDTO> getCommunitytByName(@PathVariable String name){
+    CommunityResponseDTO community = communityService.getCommunityByName(name);
+    return new ResponseEntity<>(community, HttpStatus.OK);
+  }
+  //task2
+  @PostMapping("/{id}/community-user")
+  public ResponseEntity<CommunityUserResponseDTO> createCommunityUser(
+    @PathVariable Long id, @Validated @RequestBody CommunityUserRequestDTO communityUserRequestDTO
+  ){
+    CommunityUserResponseDTO createdCommunityUser = communityUserService.createCommunityUser(id, communityUserRequestDTO);
+    return new ResponseEntity<>(createdCommunityUser, HttpStatus.CREATED);
+  }
+  //task3
+  @PostMapping
+  public ResponseEntity<CommunityResponseDTO> createCommunity(
+    @Validated @RequestBody CommunityRequestDTO communityRequestDTO){
+    CommunityResponseDTO createdCommunity = communityService.createCommunity(communityRequestDTO);
+    return new ResponseEntity<>(createdCommunity, HttpStatus.CREATED);
+  }
+  @DeleteMapping("/{id}")
+  public ResponseEntity<CommunityResponseDTO> deleteCommunity(@PathVariable Long id){
+    communityService.deleteCommunity(id);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+  @DeleteMapping("/")
+  public ResponseEntity<CommunityResponseDTO>deleteAllCommunities(){
+    communityService.deleteAllCommunities();
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+  @PutMapping("/{id}")
+  public ResponseEntity<CommunityResponseDTO> updateCommunity(@PathVariable Long id, @Validated @RequestBody CommunityRequestDTO communityRequestDTO){
+    CommunityResponseDTO updatedCommunity = communityService.updateCommunity(id, communityRequestDTO);
+    return new ResponseEntity<>(updatedCommunity, HttpStatus.OK);
+  }
 
 }

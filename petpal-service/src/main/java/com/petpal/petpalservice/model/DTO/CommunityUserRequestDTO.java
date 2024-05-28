@@ -13,7 +13,5 @@ public class CommunityUserRequestDTO {
     @NotBlank(message = "Debe tener un rol")
     private String role;
     @NotNull
-    private Long community_id;
-    @NotNull
-    private Long petOwner_id;
+    private String userName;
 }

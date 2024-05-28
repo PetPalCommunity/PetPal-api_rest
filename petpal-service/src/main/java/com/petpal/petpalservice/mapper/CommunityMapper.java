@@ -13,21 +13,21 @@ import lombok.AllArgsConstructor;
 @Component
 @AllArgsConstructor
 public class CommunityMapper {
-    private final ModelMapper modelMapper = new ModelMapper();
+  private final ModelMapper modelMapper = new ModelMapper();
 
-    public Community convertToEntity(CommunityRequestDTO communityRequestDTO){
-        return modelMapper.map(communityRequestDTO, Community.class);
-    }
+  public Community convertToEntity(CommunityRequestDTO communityRequestDTO){
+    return modelMapper.map(communityRequestDTO, Community.class);
+  }
 
-    public CommunityResponseDTO convertToDTO(Community community){
-        return modelMapper.map(community, CommunityResponseDTO.class);
-    }
+  public CommunityResponseDTO convertToDTO(Community community){
+    return modelMapper.map(community, CommunityResponseDTO.class);
+  }
 
-    public List<CommunityResponseDTO> convertToListDTO(List<Community> communities){
-        return communities.stream()
-        .map(this::convertToDTO)
-        .toList();
-    }
-    
-    
+  public List<CommunityResponseDTO> convertToListDTO(List<Community> communities){
+    return communities.stream()
+    .map(this::convertToDTO)
+    .toList();
+  }
+
+
 }

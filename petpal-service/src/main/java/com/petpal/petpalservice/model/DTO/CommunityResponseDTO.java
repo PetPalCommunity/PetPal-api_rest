@@ -1,6 +1,7 @@
 package com.petpal.petpalservice.model.DTO;
 
 
+import java.time.LocalDate;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -16,4 +17,7 @@ public class CommunityResponseDTO {
     private String description;
     private Long countFollowers;
     private List<String> tags;
+    private LocalDate creationDate;
+    private List<CommunityUserResponseDTO> communityUsers;
+
 }

@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommunityUserResponseDTO {
     private String role;
-    private Long community_id;
-    private Long petOwner_id;
+  private String username;
+  private Long communityId;
 }
