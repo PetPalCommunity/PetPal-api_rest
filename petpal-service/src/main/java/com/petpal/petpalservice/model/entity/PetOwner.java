@@ -30,9 +30,9 @@ public class PetOwner {
   @Column(name = "reputation")
   private float ownerReputation;
   @Column(name = "followers")
-  private int ownerFollowers;
+  private int ownerFollowers = 0;
   @Column(name = "followed")
-  private int ownerFollowed;
+  private int ownerFollowed = 0;
   // Visibility settings
   @Column(name = "profile_visible")
   private boolean profileVisible = true;

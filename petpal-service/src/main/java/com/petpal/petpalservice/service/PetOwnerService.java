@@ -4,8 +4,11 @@ package com.petpal.petpalservice.service;
 import com.petpal.petpalservice.exception.DuplicateResourceException;
 import com.petpal.petpalservice.exception.InvalidEmailFormatException;
 import com.petpal.petpalservice.exception.MissingRequiredFieldException;
+import com.petpal.petpalservice.mapper.PetOwnerMapper;
 import com.petpal.petpalservice.exception.InvalidCredentialsException;
+import com.petpal.petpalservice.model.dto.PersonalInfoDto;
 import com.petpal.petpalservice.model.dto.PetOwnerRequestDto;
+import com.petpal.petpalservice.model.dto.PetOwnerResponseDto;
 import com.petpal.petpalservice.model.dto.SignInRequestDto;
 import com.petpal.petpalservice.model.dto.VisibilityRequestDto;
 import com.petpal.petpalservice.model.entity.PetOwner;
@@ -19,10 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class PetOwnerService {
   private final PetOwnerRepository repository;
   private final BCryptPasswordEncoder passwordEncoder;
+  private final PetOwnerMapper mapper;
 
-  public PetOwnerService(PetOwnerRepository repository) {
+  public PetOwnerService(PetOwnerRepository repository, PetOwnerMapper mapper) {
     this.repository = repository;
     this.passwordEncoder = new BCryptPasswordEncoder();
+    this.mapper = mapper;
   }
 
   public PetOwner createPetOwner(PetOwnerRequestDto dto) {
@@ -67,5 +72,16 @@ public class PetOwnerService {
     petOwner.setPostVisible(dto.isPostVisible());
     petOwner.setPetVisible(dto.isPetVisible());
     repository.save(petOwner);
+  }
+  public PetOwnerResponseDto updatePersonalInfo(PersonalInfoDto dto, String email) {
+    PetOwner petOwner = repository.findByOwnerEmail(email);
+    // I want to assign attribute only if the value is not null
+    if (dto.getOwnerDescription() != null) petOwner.setOwnerDescription(dto.getOwnerDescription());
+    if (dto.getOwnerLocation() != null) petOwner.setOwnerLocation(dto.getOwnerLocation());
+    if (dto.getOwnerFullName() != null) petOwner.setOwnerFullName(dto.getOwnerFullName());
+    if (dto.getOwnerImage() != null) petOwner.setOwnerImage(dto.getOwnerImage());
+    if (dto.getOwnerContactInfo() != null) petOwner.setOwnerContactInfo(dto.getOwnerContactInfo());
+    repository.save(petOwner);
+    return mapper.entityToDto(petOwner);
   }
 }

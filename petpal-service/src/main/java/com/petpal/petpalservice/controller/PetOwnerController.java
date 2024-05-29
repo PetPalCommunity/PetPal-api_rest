@@ -1,6 +1,8 @@
 package com.petpal.petpalservice.controller;
 
+import com.petpal.petpalservice.model.dto.PersonalInfoDto;
 import com.petpal.petpalservice.model.dto.PetOwnerRequestDto;
+import com.petpal.petpalservice.model.dto.PetOwnerResponseDto;
 import com.petpal.petpalservice.model.dto.SignInRequestDto;
 import com.petpal.petpalservice.model.dto.VisibilityRequestDto;
 import com.petpal.petpalservice.model.entity.PetOwner;
@@ -36,5 +38,10 @@ public class PetOwnerController {
     // String email = authentication.getEmail(); // Obtener el correo electrónico del usuario autenticado
     service.updateVisibility(dto, email);
     return ResponseEntity.ok().build();
+  }
+  @GetMapping("/personalinfo")
+  public ResponseEntity<PetOwnerResponseDto> updatePersonalInfo(@RequestBody PersonalInfoDto dto, @RequestParam String email) {
+    PetOwnerResponseDto petOwnerResponseDto = service.updatePersonalInfo(dto, email);
+    return ResponseEntity.ok(petOwnerResponseDto);
   }
 }
