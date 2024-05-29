@@ -10,4 +10,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     boolean existsByIdPayment(int paymentId);
     Optional<Payment> findByIdPayment(Long paymentId);
+
+    @Query("SELECT p FROM Payment p WHERE p.amount = ?1")
+    Optional<Payment> findByAmount(int amount);
 }

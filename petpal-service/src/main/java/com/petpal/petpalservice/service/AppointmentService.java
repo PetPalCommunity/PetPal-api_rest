@@ -2,6 +2,7 @@ package com.petpal.petpalservice.service;
 
 import com.petpal.petpalservice.exception.DuplicateResourceException;
 import com.petpal.petpalservice.exception.NotFoundException;
+import com.petpal.petpalservice.mapper.AppointmentMapper;
 import com.petpal.petpalservice.model.dto.*;
 import com.petpal.petpalservice.model.entity.Appointment;
 import com.petpal.petpalservice.model.entity.Pet;
@@ -9,6 +10,7 @@ import com.petpal.petpalservice.model.entity.Vet;
 import com.petpal.petpalservice.repository.AppointmentRepository;
 import com.petpal.petpalservice.repository.PetRepository;
 import com.petpal.petpalservice.repository.VetRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,16 +19,12 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final PetRepository petRepository;
     private final VetRepository vetRepository;
-
-    public AppointmentService(AppointmentRepository appointmentRepository, PetRepository petRepository, VetRepository vetRepository) {
-        this.appointmentRepository = appointmentRepository;
-        this.petRepository = petRepository;
-        this.vetRepository = vetRepository;
-    }
+    private final AppointmentMapper appointmentMapper;
 
     public Appointment createAppointment(AppointmentRequestDto appointmentDto) {
         Optional<Pet> optionalPet = petRepository.findById(appointmentDto.getIdPet());
@@ -63,5 +61,16 @@ public class AppointmentService {
         Appointment appointment = optionalAppointment.get();
         appointment.setConfirm(true);
         return appointmentRepository.save(appointment);
+    }
+
+    @Transactional
+    public List<AppointmentResponseDto> getAllAppointments(){
+        List<Appointment> appointments = appointmentRepository.findAll();
+        return appointmentMapper.convertToListDto(appointments);
+    }
+
+    public List<AppointmentResponseDto>getAppointmentsByPetId(int id){
+        List<Appointment> appointments = appointmentRepository.findByPetId(id);
+        return appointmentMapper.convertToListDto(appointments);
     }
 }

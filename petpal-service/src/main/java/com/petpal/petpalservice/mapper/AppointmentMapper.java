@@ -22,9 +22,15 @@ public class AppointmentMapper {
         return modelMapper.map(appointment, AppointmentResponseDto.class);
     }
 
-    public List<AppointmentResponseDto> convertToDto(List<Appointment> appointments) {
+    public List<AppointmentResponseDto> convertToListDto(List<Appointment> appointments) {
         return appointments.stream()
                 .map(this::convertToDto)
+                .toList();
+    }
+
+    public List<Appointment> convertToLitEntity(List<AppointmentRequestDto> appointmentRequestDtos) {
+        return appointmentRequestDtos.stream()
+                .map(this::convertToEntity)
                 .toList();
     }
 }
