@@ -67,4 +67,23 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(InvalidDateFormatException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ResponseEntity<Map<String, Object>> handleInvalidDateFormatException(InvalidDateFormatException ex, WebRequest request) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("error", "Format error");
+        errorResponse.put("message", ex.getMessage());
+        errorResponse.put("status", HttpStatus.UNPROCESSABLE_ENTITY.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<Map<String, Object>> handleNotFoundException(NotFoundException ex, WebRequest request) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("error", "Format error");
+        errorResponse.put("message", ex.getMessage());
+        errorResponse.put("status", HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
 }

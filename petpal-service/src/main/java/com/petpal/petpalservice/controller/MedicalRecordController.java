@@ -28,7 +28,7 @@ public class MedicalRecordController{
     }
 
     @GetMapping("/viewRecords")
-    public ResponseEntity<?> getRecordsbyDate(@RequestParam String date){
+    public ResponseEntity<List<MedicalRecordResponseDto>> getRecordsbyDate(@RequestParam String date){
         List<MedicalRecordResponseDto> records = service.getMedicalRecordsByDate(date);
         return new ResponseEntity<>(records, HttpStatus.OK);
     }

@@ -7,6 +7,7 @@ import com.petpal.petpalservice.mapper.MedicalRecordMapper;
 import com.petpal.petpalservice.model.dto.MedicalRecordRequestDto;
 import com.petpal.petpalservice.model.dto.MedicalRecordResponseDto;
 import com.petpal.petpalservice.model.entity.MedicalRecord;
+import com.petpal.petpalservice.model.entity.Pet;
 import com.petpal.petpalservice.repository.DocumentRepository;
 import com.petpal.petpalservice.repository.MedicalRecordRepository;
 import com.petpal.petpalservice.repository.PetRepository;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,22 +34,32 @@ public class MedicalRecordService{
     }
 
     public List<MedicalRecordResponseDto> getMedicalRecordsByDate(String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        try {
-            LocalDate.parse(date, formatter);
-        } catch (DateTimeParseException e) {
-            throw new InvalidDateFormatException("Formato de fecha incorrecto. Porfavor usar 'yyyy-MM-dd'.");
+        try{
+            Date sqlDate = Date.valueOf(date);
+            List<MedicalRecord> records = medicalRecordRepository.findByDate(sqlDate);
+            return medicalRecordMapper.converToDtoList(records);
         }
-        Date sqlDate = java.sql.Date.valueOf(date);
-        List<MedicalRecord> records = medicalRecordRepository.findByDate(sqlDate);
-        return medicalRecordMapper.converToDtoList(records);
+        catch (IllegalArgumentException e){
+            throw new InvalidDateFormatException("Invalid date format");
+        }
     }
 
-    public MedicalRecord createMedicalRecord(MedicalRecordRequestDto medicalRecordDTO) {
-        if(!petRepository.existsByIdPet(medicalRecordDTO.getIdPet())) {
-            throw new NotFoundException("Mascota no existe");
+    public MedicalRecord createMedicalRecord(MedicalRecordRequestDto dto) {
+        Optional<Pet> optionalPet = petRepository.findById(dto.getIdPet());
+        if (optionalPet.isEmpty()) {
+            throw new NotFoundException("Pet not found");
         }
-        MedicalRecord medicalRecord = medicalRecordMapper.convertToEntity(medicalRecordDTO);
+
+        Date originalDate = dto.getDate();
+        LocalDate localDate = originalDate.toLocalDate();
+        LocalDate nextDay = localDate.plusDays(1);
+        Date nextDayDate = java.sql.Date.valueOf(nextDay);
+
+        MedicalRecord medicalRecord = new MedicalRecord();
+        medicalRecord.setPet(optionalPet.get());
+        medicalRecord.setDate(nextDayDate);
+        medicalRecord.setKind(dto.getKind());
+        medicalRecord.setDescription(dto.getDescription());
         return medicalRecordRepository.save(medicalRecord);
     }
 }
