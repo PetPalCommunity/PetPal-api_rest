@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReminderResponseDto {
+    private int id;
     private String reminderName;
     private String reminderDescription;
     private String nextReminderDate;

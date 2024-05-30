@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 @Data
@@ -39,4 +40,12 @@ public class Reminder {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_pet")
     private Pet pet;
+
+    public String getReminderTime() {
+        if (this.reminderTime == null) {
+            return null;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        return this.reminderTime.format(formatter);
+    }
 }

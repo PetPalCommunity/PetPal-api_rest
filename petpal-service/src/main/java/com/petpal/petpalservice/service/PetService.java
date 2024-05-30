@@ -81,7 +81,6 @@ public class PetService {
             }
         }
         pet = petRepository.save(pet);
-
         return  mapper.entityToDtoPet(pet);
     }
 
