@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.petpal.petpalservice.model.entity.Pet;
 import com.petpal.petpalservice.model.entity.Reminder;
 
 public interface ReminderRepository extends JpaRepository<Reminder, Integer>{
