@@ -3,6 +3,10 @@ package com.petpal.petpalservice.controller;
 import com.petpal.petpalservice.model.dto.PetRequestDto;
 import com.petpal.petpalservice.model.dto.PetResponseDto;
 import com.petpal.petpalservice.model.dto.petUpdateRequestDto;
+import com.petpal.petpalservice.model.dto.ReminderResponseDto;
+import com.petpal.petpalservice.model.dto.ReminderUpdateRequestDto;
+import com.petpal.petpalservice.model.dto.ReminderRequestDto;
+
 import com.petpal.petpalservice.service.PetService;
 
 import lombok.AllArgsConstructor;
@@ -41,10 +45,10 @@ public class PetController {
         return new ResponseEntity<>(pet, HttpStatus.OK);
     }
 
-    @PutMapping("/{ownerId}/{id}")
+    @PatchMapping("/{ownerId}/{id}")
     public ResponseEntity<PetResponseDto> updateAccount(@PathVariable int ownerId,@PathVariable int id,
-                                                            @Validated @RequestBody petUpdateRequestDto accountDTO) {
-        PetResponseDto updatedPet = service.updatePet(ownerId,id, accountDTO);
+                                                            @Validated @RequestBody petUpdateRequestDto petDTO) {
+        PetResponseDto updatedPet = service.updatePet(ownerId,id, petDTO);
         return new ResponseEntity<>(updatedPet, HttpStatus.OK);
     }
     
@@ -52,5 +56,36 @@ public class PetController {
     public ResponseEntity<Void> deleteAccount(@PathVariable int ownerId,@PathVariable int id) {
         service.deletePet(ownerId,id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/reminders")
+    public ResponseEntity<ReminderResponseDto> createReminder(@Validated @RequestBody ReminderRequestDto dto) {
+        ReminderResponseDto createdReminder = service.createReminder(dto);
+        return new ResponseEntity<>(createdReminder, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/reminders/{petId}")
+    public ResponseEntity<List<ReminderResponseDto>> getRemindersByPetId(@PathVariable int petId) {
+        List<ReminderResponseDto> reminders = service.getRemindersByPetId(petId);
+        return new ResponseEntity<>(reminders, HttpStatus.OK);
+    }
+
+    @GetMapping("/reminders/{petId}/{id}")
+    public ResponseEntity<ReminderResponseDto> getReminderByPetId(@PathVariable int petId,@PathVariable int id) {
+        ReminderResponseDto reminder = service.getReminderByPetId(petId,id);
+        return new ResponseEntity<>(reminder, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/reminders/{petId}/{id}")
+    public ResponseEntity<Void> deleteReminder(@PathVariable int petId,@PathVariable int id) {
+        service.deleteReminder(petId,id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping("/reminders/{petId}/{id}")
+    public ResponseEntity<ReminderResponseDto> updateReminder(@PathVariable int petId,@PathVariable int id,
+                                                            @Validated @RequestBody ReminderUpdateRequestDto reminderDTO) {
+        ReminderResponseDto updatedReminder = service.updateReminder(petId,id, reminderDTO);
+        return new ResponseEntity<>(updatedReminder, HttpStatus.OK);
     }
 }
