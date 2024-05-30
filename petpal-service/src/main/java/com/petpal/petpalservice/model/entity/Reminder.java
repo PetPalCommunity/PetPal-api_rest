@@ -41,6 +41,7 @@ public class Reminder {
     @JoinColumn(name = "id_pet")
     private Pet pet;
 
+    
     public String getReminderTime() {
         if (this.reminderTime == null) {
             return null;

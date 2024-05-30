@@ -20,6 +20,7 @@ import com.petpal.petpalservice.model.entity.PetOwner;
 import com.petpal.petpalservice.model.entity.Reminder;
 import com.petpal.petpalservice.repository.PetOwnerRepository;
 import com.petpal.petpalservice.repository.PetRepository;
+import com.petpal.petpalservice.repository.ReminderRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,6 +44,9 @@ public class PetServiceTest {
 
     @Mock
     private PetOwnerRepository petOwnerRepository;
+
+    @Mock
+    private ReminderRepository reminderRepository;
 
     @Mock
     private PetMapper petMapper;
@@ -129,7 +133,7 @@ public class PetServiceTest {
         when(petMapper.dtoToEntityReminder(reminderRequestDto)).thenReturn(reminder);
         pet.getReminders().add(reminder);
 
-        when(petRepository.save(pet)).thenReturn(pet);
+        when(reminderRepository.save(reminder)).thenReturn(reminder);
         when(petMapper.entityToDtoReminder(reminder)).thenReturn(new ReminderResponseDto(reminder.getId(),reminder.getReminderName(), reminder.getReminderDescription(),reminder.getNextReminderDate().toString(), reminder.getReminderTime().toString(), reminder.getDays().toString(), reminder.getPet().getId()));
         //Act
 
@@ -146,7 +150,6 @@ public class PetServiceTest {
         //Verify
         verify(petRepository, times(1)).findById(reminderRequestDto.getIdPet());
         verify(petMapper, times(1)).dtoToEntityReminder(reminderRequestDto);
-        verify(petRepository, times(1)).save(pet);
         verify(petMapper, times(1)).entityToDtoReminder(reminder);
 
     }
@@ -223,24 +226,16 @@ public class PetServiceTest {
         int petId = 1;
         int reminderId = 1;
 
-        Pet pet = new Pet();
-        pet.setId(petId);
-        pet.setReminders(new HashSet<>());
-
         Reminder reminder = new Reminder();
         reminder.setId(reminderId);
-        pet.getReminders().add(reminder);
-        
+
         // Configuramos el mock de petRepository
-        when(petRepository.findById(petId)).thenReturn(Optional.of(pet));
-        
+        when(reminderRepository.findByPetIdAndReminderId(petId,reminderId)).thenReturn(Optional.of(reminder));
+
         //Act
         assertDoesNotThrow(()-> petService.deleteReminder(petId, reminderId));
-
-        //Assert
-        assertTrue(pet.getReminders().isEmpty());
         //Verify
-        verify(petRepository, times(1)).save(pet);
+        verify(reminderRepository, times(1)).delete(reminder);
     }
 
     @Test
@@ -249,35 +244,14 @@ public class PetServiceTest {
         int petId = 1;
         int reminderId = 1;
 
-        Pet pet = new Pet();
-        pet.setId(petId);
-        pet.setReminders(new HashSet<>());
-
         // Configuramos el mock de petRepository
-        when(petRepository.findById(petId)).thenReturn(Optional.of(pet));
+        when(reminderRepository.findByPetIdAndReminderId(petId,reminderId)).thenReturn(Optional.empty());
 
         //Act
         assertThrows(ResourceNotFoundException.class, ()-> petService.deleteReminder(petId, reminderId));
 
         //Verify
-        verify(petRepository, never()).save(pet);
-
-    }
-
-    @Test
-    void testDeleteReminder_NotFoundPetId() {
-        //Arrange
-        int petId = 1;
-        int reminderId = 1;
-
-        // Configuramos el mock de petRepository
-        when(petRepository.findById(petId)).thenReturn(Optional.empty());
-
-        //Act
-        assertThrows(ResourceNotFoundException.class, ()-> petService.deleteReminder(petId, reminderId));
-
-        //Verify
-        verify(petRepository, never()).save(any());
+        verify(reminderRepository, never()).delete(any());
     }
 
     @Test
@@ -391,9 +365,9 @@ public class PetServiceTest {
         reminder.setId(reminderId);
         pet.getReminders().add(reminder);
 
-        // Configuramos el mock de petRepository
-        when(petRepository.findById(petId)).thenReturn(Optional.of(pet));
-        // Configuramos el mock de petMapper
+        // Configuramos el mock de reminderRepository
+        when(reminderRepository.findByPetIdAndReminderId(petId,reminderId)).thenReturn(Optional.of(reminder));
+        // Configuramos el mock de reminderMapper
         ReminderResponseDto reminderResponseDto = new ReminderResponseDto();
         reminderResponseDto.setId(reminder.getId());
         when(petMapper.entityToDtoReminder(reminder)).thenReturn(reminderResponseDto);
@@ -414,28 +388,8 @@ public class PetServiceTest {
         int petId = 1;
         int reminderId = 1;
 
-        Pet pet = new Pet();
-        pet.setId(petId);
-        pet.setReminders(new HashSet<>());
-
-        // Configuramos el mock de petRepository
-        when(petRepository.findById(petId)).thenReturn(Optional.of(pet));
-
-        //Act
-        assertThrows(ResourceNotFoundException.class, ()-> petService.getReminderByPetId(petId, reminderId));
-
-        //Verify
-        verify(petMapper, never()).entityToDtoReminder(any());
-    }
-    
-    @Test
-    void testGetReminderByPetId_NotFoundPetId() {
-        //Arrange
-        int petId = 1;
-        int reminderId = 1;
-
-        // Configuramos el mock de petRepository
-        when(petRepository.findById(petId)).thenReturn(Optional.empty());
+        // Configuramos el mock de reminderRepository
+        when(reminderRepository.findByPetIdAndReminderId(petId,reminderId)).thenReturn(Optional.empty());
 
         //Act
         assertThrows(ResourceNotFoundException.class, ()-> petService.getReminderByPetId(petId, reminderId));
@@ -614,8 +568,9 @@ public class PetServiceTest {
         updatedReminder.setPet(pet);
 
         // Configuramos el mock de petRepository
-        when(petRepository.findById(petId)).thenReturn(Optional.of(pet));
-        when(petRepository.save(pet)).thenReturn(pet);
+        when(reminderRepository.findByPetIdAndReminderId(petId, reminderId)).thenReturn(Optional.of(existingReminder));
+        when(reminderRepository.save(existingReminder)).thenReturn(updatedReminder);
+
         // Configuramos el mock de petMapper
         ReminderResponseDto reminderResponseDto = new ReminderResponseDto();
         reminderResponseDto.setId(updatedReminder.getId());
@@ -654,7 +609,7 @@ public class PetServiceTest {
         pet.setReminders(new HashSet<>());
 
         // Configuramos el mock de petRepository
-        when(petRepository.findById(petId)).thenReturn(Optional.of(pet));
+        when(reminderRepository.findByPetIdAndReminderId(petId, reminderId)).thenReturn(Optional.empty());
 
         //Act
         assertThrows(ResourceNotFoundException.class, ()-> petService.updateReminder(petId, reminderId, reminderUpdateRequestDto));
@@ -663,25 +618,4 @@ public class PetServiceTest {
         verify(petRepository, never()).save(pet);
     }
 
-    @Test
-    void testUpdateReminder_NotFoundPetId() {
-        //Arrange
-        int petId = 1;
-        int reminderId = 1;
-
-        ReminderUpdateRequestDto reminderUpdateRequestDto = new ReminderUpdateRequestDto();
-        reminderUpdateRequestDto.setDays(Set.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY));
-        reminderUpdateRequestDto.setReminderDescription("Recordar darle de comer a Firulais");
-        reminderUpdateRequestDto.setReminderName("Comida de Firulais");
-        reminderUpdateRequestDto.setReminderTime("12:00:00");
-
-        // Configuramos el mock de petRepository
-        when(petRepository.findById(petId)).thenReturn(Optional.empty());
-
-        //Act
-        assertThrows(ResourceNotFoundException.class, ()-> petService.updateReminder(petId, reminderId, reminderUpdateRequestDto));
-
-        //Verify
-        verify(petRepository, never()).save(any());
-    }
 }

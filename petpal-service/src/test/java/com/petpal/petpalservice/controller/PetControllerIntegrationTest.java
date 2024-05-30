@@ -66,7 +66,7 @@ public class PetControllerIntegrationTest {
 
     @Test
     public void testDeleteReminder() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/pets/reminders/{petId}/{id}", 2, 2))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/pets/reminders/{petId}/{id}", 2, 1))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 
     }
@@ -87,7 +87,7 @@ public class PetControllerIntegrationTest {
 
     @Test
     public void testGetReminderByPetId() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/pets/reminders/{petId}/{id}", 2, 3))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/pets/reminders/{petId}/{id}", 2,2))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
     }
@@ -119,12 +119,11 @@ public class PetControllerIntegrationTest {
     public void testUpdateReminder() throws Exception {
         ReminderUpdateRequestDto reminderRequestDto = new ReminderUpdateRequestDto();
         reminderRequestDto.setReminderName("Vacunaton");
-        reminderRequestDto.setReminderDescription("Vacuna contra la rabia");
         reminderRequestDto.setReminderTime("12:00:00");
         reminderRequestDto.setDays(Set.of(DayOfWeek.MONDAY, DayOfWeek.SATURDAY));
 
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/pets/reminders/{petId}/{id}", 2, 3)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/pets/reminders/{petId}/{id}", 2, 2)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(reminderRequestDto)))
                 .andExpect(MockMvcResultMatchers.status().isOk());

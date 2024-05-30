@@ -11,6 +11,7 @@ import com.petpal.petpalservice.model.dto.petUpdateRequestDto;
 import com.petpal.petpalservice.model.entity.Pet;
 import com.petpal.petpalservice.model.entity.PetOwner;
 import com.petpal.petpalservice.repository.PetRepository;
+import com.petpal.petpalservice.repository.ReminderRepository;
 import com.petpal.petpalservice.repository.PetOwnerRepository;
 import com.petpal.petpalservice.model.dto.ReminderRequestDto;
 import com.petpal.petpalservice.model.dto.ReminderResponseDto;
@@ -34,6 +35,7 @@ import lombok.AllArgsConstructor;
 public class PetService {
     private final PetRepository petRepository;
     private final PetOwnerRepository PetOwnerRepository;
+    private final ReminderRepository reminderRepository;
     private final PetMapper mapper;
 
     @Transactional
@@ -106,14 +108,13 @@ public class PetService {
         reminder.setNextReminderDate(nextReminderDate);
         reminder.setPet(pet);   
         pet.getReminders().add(reminder);
-        petRepository.save(pet);
+
+        reminderRepository.save(reminder);
         return mapper.entityToDtoReminder(reminder);
     }
 
     @Transactional(readOnly = true)
     public List<ReminderResponseDto> getRemindersByPetId(int idPet) {
-        //Set<Reminder> reminders = petRepository.findByPetId(idPet)
-                    //.orElseThrow(()-> new ResourceNotFoundException("La mascota con el id "+idPet+" no tiene recordatorios")); 
         Pet pet = petRepository.findById(idPet)
                     .orElseThrow(()-> new ResourceNotFoundException("La mascota con el id "+idPet+" no existe"));
         Set<Reminder> reminders = pet.getReminders();
@@ -122,23 +123,15 @@ public class PetService {
 
     @Transactional(readOnly = true)
     public ReminderResponseDto getReminderByPetId(int idPet, int idReminder) {
-        Pet pet = petRepository.findById(idPet)
-                    .orElseThrow(()-> new ResourceNotFoundException("La mascota con el id "+idPet+" no existe"));
-        Reminder reminder = pet.getReminders().stream()
-                    .filter(r -> r.getId() == idReminder)
-                    .findFirst()
+        Reminder reminder = reminderRepository.findByPetIdAndReminderId(idPet, idReminder)
                     .orElseThrow(()-> new ResourceNotFoundException("El recordatorio con el id "+idReminder+" no pertenece a la mascota con el id "+idPet));
         return mapper.entityToDtoReminder(reminder);
     }
 
     @Transactional
-    public ReminderResponseDto updateReminder(int idPet, int id, ReminderUpdateRequestDto dto) {
-        Pet pet = petRepository.findById(idPet)
-                    .orElseThrow(()-> new ResourceNotFoundException("La mascota con el id "+idPet+" no existe")); 
-        Reminder reminder = pet.getReminders().stream()
-                    .filter(r -> r.getId() == id)
-                    .findFirst()
-                    .orElseThrow(()-> new ResourceNotFoundException("El recordatorio con el id "+id+" no pertenece a la mascota con el id "+idPet));
+    public ReminderResponseDto updateReminder(int idPet, int idReminder, ReminderUpdateRequestDto dto) {
+        Reminder reminder = reminderRepository.findByPetIdAndReminderId(idPet, idReminder)
+                    .orElseThrow(()-> new ResourceNotFoundException("El recordatorio con el id "+idReminder+" no pertenece a la mascota con el id "+idPet));
         Field[] fields = dto.getClass().getDeclaredFields();
         for(Field field: fields){
             field.setAccessible(true);
@@ -158,20 +151,15 @@ public class PetService {
         if (dto.getReminderTime() != null){
             reminder.setReminderTime(LocalTime.parse(dto.getReminderTime()));
         }
-        petRepository.save(pet);
+        reminderRepository.save(reminder);
         return mapper.entityToDtoReminder(reminder);
     }
 
     @Transactional
     public void deleteReminder(int idPet, int idReminder) {
-        Pet pet = petRepository.findById(idPet)
-                    .orElseThrow(()-> new ResourceNotFoundException("La mascota con el id "+idPet+" no tiene recordatorios")); 
-        Reminder reminder = pet.getReminders().stream()
-                    .filter(r -> r.getId() == idReminder)
-                    .findFirst()
+        Reminder reminder = reminderRepository.findByPetIdAndReminderId(idPet, idReminder)
                     .orElseThrow(()-> new ResourceNotFoundException("El recordatorio con el id "+idReminder+" no pertenece a la mascota con el id "+idPet));
-        pet.getReminders().remove(reminder);
-        petRepository.save(pet);
+        reminderRepository.delete(reminder);
     }
 
 }
