@@ -11,7 +11,6 @@ public class PersonalInfoDto {
   private String ownerDescription;
   private String ownerLocation;
   private String ownerFullName;
-  private String ownerImage;
   private String ownerContactInfo;
   public String getOwnerDescription() {
     return ownerDescription;
@@ -30,12 +29,6 @@ public class PersonalInfoDto {
   }
   public void setOwnerFullName(String ownerFullName) {
     this.ownerFullName = ownerFullName;
-  }
-  public String getOwnerImage() {
-    return ownerImage;
-  }
-  public void setOwnerImage(String ownerImage) {
-    this.ownerImage = ownerImage;
   }
   public String getOwnerContactInfo() {
     return ownerContactInfo;

@@ -10,12 +10,16 @@ import com.petpal.petpalservice.model.dto.PersonalInfoDto;
 import com.petpal.petpalservice.model.dto.PetOwnerRequestDto;
 import com.petpal.petpalservice.model.dto.PetOwnerResponseDto;
 import com.petpal.petpalservice.model.dto.SignInRequestDto;
-import com.petpal.petpalservice.model.dto.VisibilityRequestDto;
+import com.petpal.petpalservice.model.dto.StorageService;
 import com.petpal.petpalservice.model.entity.PetOwner;
 import com.petpal.petpalservice.repository.PetOwnerRepository;
+
+import java.lang.reflect.Field;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ReflectionUtils;
 
 @Service
 @Transactional
@@ -23,11 +27,13 @@ public class PetOwnerService {
   private final PetOwnerRepository repository;
   private final BCryptPasswordEncoder passwordEncoder;
   private final PetOwnerMapper mapper;
+  private final StorageService storageService;
 
-  public PetOwnerService(PetOwnerRepository repository, PetOwnerMapper mapper) {
+  public PetOwnerService(PetOwnerRepository repository, PetOwnerMapper mapper, StorageService storageService) {
     this.repository = repository;
     this.passwordEncoder = new BCryptPasswordEncoder();
     this.mapper = mapper;
+    this.storageService = storageService;
   }
 
   public PetOwner createPetOwner(PetOwnerRequestDto dto) {
@@ -59,28 +65,40 @@ public class PetOwnerService {
   }
 
   public PetOwner validateSignIn(SignInRequestDto dto) {
-    PetOwner petOwner = repository.findByOwnerEmail(dto.getOwnerEmail());
+    PetOwner petOwner = repository.findByOwnerEmail(dto.getOwnerEmail())
+    .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
 
     if (petOwner == null || !passwordEncoder.matches(dto.getOwnerPassword(), petOwner.getOwnerPassword())) {
       throw new InvalidCredentialsException("Invalid email or password");
     }
     return petOwner;
   }
-  public void updateVisibility(VisibilityRequestDto dto, String email) {
-    PetOwner petOwner = repository.findByOwnerEmail(email);
-    petOwner.setProfileVisible(dto.isProfileVisible());
-    petOwner.setPostVisible(dto.isPostVisible());
-    petOwner.setPetVisible(dto.isPetVisible());
-    repository.save(petOwner);
-  }
   public PetOwnerResponseDto updatePersonalInfo(PersonalInfoDto dto, String email) {
-    PetOwner petOwner = repository.findByOwnerEmail(email);
-    // I want to assign attribute only if the value is not null
-    if (dto.getOwnerDescription() != null) petOwner.setOwnerDescription(dto.getOwnerDescription());
-    if (dto.getOwnerLocation() != null) petOwner.setOwnerLocation(dto.getOwnerLocation());
-    if (dto.getOwnerFullName() != null) petOwner.setOwnerFullName(dto.getOwnerFullName());
-    if (dto.getOwnerImage() != null) petOwner.setOwnerImage(dto.getOwnerImage());
-    if (dto.getOwnerContactInfo() != null) petOwner.setOwnerContactInfo(dto.getOwnerContactInfo());
+    PetOwner petOwner = repository.findByOwnerEmail(email)
+    .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
+    Field[] fields = dto.getClass().getDeclaredFields();
+    for(Field field: fields){
+      field.setAccessible(true);
+      try {
+        Object value = field.get(dto);
+        if(value != null){
+          Field perInfo = petOwner.getClass().getDeclaredField(field.getName());
+          perInfo.setAccessible(true);
+          ReflectionUtils.setField(perInfo,petOwner,value);
+          perInfo.setAccessible(false);
+        }
+        field.setAccessible(false);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    repository.save(petOwner);
+    return mapper.entityToDto(petOwner);
+  }
+  public PetOwnerResponseDto updateProfilePicture(String email, String path) {
+    PetOwner petOwner = repository.findByOwnerEmail(email)
+    .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
+    petOwner.setOwnerImage(path);
     repository.save(petOwner);
     return mapper.entityToDto(petOwner);
   }
