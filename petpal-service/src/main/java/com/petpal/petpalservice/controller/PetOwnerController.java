@@ -32,8 +32,6 @@ public class PetOwnerController {
   }
   @PutMapping("/privacy")
   public ResponseEntity<Void> updatePrivacySettings(@RequestBody VisibilityRequestDto dto, @RequestParam String email) {
-    // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    // String email = authentication.getEmail(); // Obtener el correo electrónico del usuario autenticado
     service.updateVisibility(dto, email);
     return ResponseEntity.ok().build();
   }

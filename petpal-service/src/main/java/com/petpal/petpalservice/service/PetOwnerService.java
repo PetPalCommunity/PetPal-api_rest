@@ -4,15 +4,20 @@ package com.petpal.petpalservice.service;
 import com.petpal.petpalservice.exception.DuplicateResourceException;
 import com.petpal.petpalservice.exception.InvalidEmailFormatException;
 import com.petpal.petpalservice.exception.MissingRequiredFieldException;
+import com.petpal.petpalservice.exception.ResourceNotFoundException;
 import com.petpal.petpalservice.exception.InvalidCredentialsException;
 import com.petpal.petpalservice.model.dto.PetOwnerRequestDto;
 import com.petpal.petpalservice.model.dto.SignInRequestDto;
 import com.petpal.petpalservice.model.dto.VisibilityRequestDto;
 import com.petpal.petpalservice.model.entity.PetOwner;
 import com.petpal.petpalservice.repository.PetOwnerRepository;
+
+import java.lang.reflect.Field;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ReflectionUtils;
 
 @Service
 @Transactional
@@ -54,18 +59,31 @@ public class PetOwnerService {
   }
 
   public PetOwner validateSignIn(SignInRequestDto dto) {
-    PetOwner petOwner = repository.findByOwnerEmail(dto.getOwnerEmail());
-
+    PetOwner petOwner = repository.findByOwnerEmail(dto.getOwnerEmail()).orElseThrow(() -> new ResourceNotFoundException("Invalid email"));
     if (petOwner == null || !passwordEncoder.matches(dto.getOwnerPassword(), petOwner.getOwnerPassword())) {
       throw new InvalidCredentialsException("Invalid email or password");
     }
     return petOwner;
   }
   public void updateVisibility(VisibilityRequestDto dto, String email) {
-    PetOwner petOwner = repository.findByOwnerEmail(email);
-    petOwner.setProfileVisible(dto.isProfileVisible());
-    petOwner.setPostVisible(dto.isPostVisible());
-    petOwner.setPetVisible(dto.isPetVisible());
+    PetOwner petOwner = repository.findByOwnerEmail(email)
+      .orElseThrow(() -> new ResourceNotFoundException("Email not found"));
+    Field[] fields = dto.getClass().getDeclaredFields();
+    for(Field field: fields){
+      field.setAccessible(true);
+      try {
+        Object value = field.get(dto);
+        if(value != null){
+          Field visibilityField = petOwner.getClass().getDeclaredField(field.getName());
+          visibilityField.setAccessible(true);
+          ReflectionUtils.setField(visibilityField,petOwner,value);
+          visibilityField.setAccessible(false);
+        }
+        field.setAccessible(false);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
     repository.save(petOwner);
   }
 }
