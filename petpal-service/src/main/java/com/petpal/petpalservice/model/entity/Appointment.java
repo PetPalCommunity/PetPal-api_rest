@@ -27,7 +27,7 @@ public class Appointment {
     private Pet pet;
     @Column(name = "date", nullable = false, unique = true)
     private Date date;
-    @Column(name = "time", nullable = false, unique = true)
+    @Column(name = "time", nullable = false)
     private Time time;
     @Column(name = "reason", nullable = false)
     private String reason;
