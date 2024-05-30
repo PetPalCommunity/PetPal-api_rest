@@ -19,8 +19,12 @@ import java.sql.Time;
 
 public class MedicalRecordRequestDto{
     @NotBlank(message = "La fecha no puede estar vacia")
-    @DateTimeFormat
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     Date date;
     @NotBlank(message = "El id de la mascota no puede estar vacio")
     private int idPet;
+    @NotBlank(message = "El tipo de registro no puede estar vacio")
+    private String kind;
+    @NotBlank(message = "La descripción no puede estar vacia")
+    private String description;
 }

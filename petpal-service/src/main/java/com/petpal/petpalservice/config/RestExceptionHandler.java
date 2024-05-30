@@ -1,9 +1,6 @@
 package com.petpal.petpalservice.config;
 
-import com.petpal.petpalservice.exception.DuplicateResourceException;
-import com.petpal.petpalservice.exception.InvalidEmailFormatException;
-import com.petpal.petpalservice.exception.MissingRequiredFieldException;
-import com.petpal.petpalservice.exception.NotFoundException;
+import com.petpal.petpalservice.exception.*;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -61,5 +58,10 @@ public class RestExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ProblemDetail handleNotFoundException(NotFoundException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidDateFormatException.class)
+    public ProblemDetail handleInvalidDateFormatException(NotFoundException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
     }
 }
