@@ -25,8 +25,8 @@ public class AppointmentController {
         return ResponseEntity.ok(created);
     }
     @PostMapping("/confirmAppointment")
-    public ResponseEntity<Appointment> updateAppointmentConfirmation(@RequestBody AppointmentResponseDto dto) {
-        Appointment updated = service.updateAppointmentConfirmation(dto);
+    public ResponseEntity<Appointment> updateAppointmentConfirmation(@RequestParam int id) {
+        Appointment updated = service.updateAppointmentConfirmation(id);
         return ResponseEntity.ok(updated);
     }
 

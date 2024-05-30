@@ -53,8 +53,8 @@ public class AppointmentService {
     }
 
     @Transactional
-    public Appointment updateAppointmentConfirmation(AppointmentResponseDto dto) {
-        Optional<Appointment> optionalAppointment = appointmentRepository.findByIdAppointment(dto.getId());
+    public Appointment updateAppointmentConfirmation(int id) {
+        Optional<Appointment> optionalAppointment = appointmentRepository.findByIdAppointment(id);
         if (optionalAppointment.isEmpty()) {
             throw new NotFoundException("Appointment not found");
         }
@@ -63,14 +63,9 @@ public class AppointmentService {
         return appointmentRepository.save(appointment);
     }
 
-    @Transactional
-    public List<AppointmentResponseDto> getAllAppointments(){
-        List<Appointment> appointments = appointmentRepository.findAll();
-        return appointmentMapper.convertToListDto(appointments);
-    }
-
     public List<AppointmentResponseDto>getAppointmentsByPetId(int id){
         List<Appointment> appointments = appointmentRepository.findByPetId(id);
         return appointmentMapper.convertToListDto(appointments);
     }
+
 }
