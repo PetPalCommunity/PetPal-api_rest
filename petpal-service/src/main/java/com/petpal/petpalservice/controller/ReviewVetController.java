@@ -20,4 +20,9 @@ public class ReviewVetController {
         ReviewVet created = service.createReview(dto);
         return ResponseEntity.ok(created);
     }
+
+    @GetMapping("/{id}/reviews")
+    public ResponseEntity<?> getReviewsByVetId(@PathVariable int id) {
+        return ResponseEntity.ok(service.getReviewsByVetId(id));
+    }
 }
