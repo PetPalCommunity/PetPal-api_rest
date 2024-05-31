@@ -52,6 +52,12 @@ public class PetOwnerController {
         PetOwner follower = service.getPetOwner(followerId);
         PetOwner followed = service.getPetOwner(followedId);
 
+
+        Followers existingFollowers = followersRepository.findByFollowerIdAndFollowedId(followerId, followedId);
+        if (existingFollowers != null) {
+            throw new IllegalArgumentException("User is already following this user");
+        }
+
         service.incrementFollowersCount(followerId);
         service.incrementFollowedCount(followedId);
 
@@ -60,7 +66,6 @@ public class PetOwnerController {
         followers.setFollowed(followed);
         followersRepository.save(followers);
         return ResponseEntity.ok(followers);
-
 
     }
 
