@@ -7,6 +7,7 @@ import com.petpal.petpalservice.exception.MissingRequiredFieldException;
 import com.petpal.petpalservice.exception.ResourceNotFoundException;
 import com.petpal.petpalservice.exception.InvalidCredentialsException;
 import com.petpal.petpalservice.model.dto.PetOwnerRequestDto;
+import com.petpal.petpalservice.model.dto.PetOwnerResponseDto;
 import com.petpal.petpalservice.model.dto.SignInRequestDto;
 import com.petpal.petpalservice.model.dto.VisibilityRequestDto;
 import com.petpal.petpalservice.model.entity.PetOwner;
@@ -14,6 +15,7 @@ import com.petpal.petpalservice.repository.PetOwnerRepository;
 
 import java.lang.reflect.Field;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,10 +26,12 @@ import org.springframework.util.ReflectionUtils;
 public class PetOwnerService {
   private final PetOwnerRepository repository;
   private final BCryptPasswordEncoder passwordEncoder;
+  private final ModelMapper modelmapper = new ModelMapper();
 
   public PetOwnerService(PetOwnerRepository repository) {
     this.repository = repository;
     this.passwordEncoder = new BCryptPasswordEncoder();
+    // this.modelmapper = modelmapper;
   }
 
   public PetOwner createPetOwner(PetOwnerRequestDto dto) {
@@ -65,7 +69,7 @@ public class PetOwnerService {
     }
     return petOwner;
   }
-  public void updateVisibility(VisibilityRequestDto dto, String email) {
+  public VisibilityRequestDto updateVisibility(VisibilityRequestDto dto, String email) {
     PetOwner petOwner = repository.findByOwnerEmail(email)
       .orElseThrow(() -> new ResourceNotFoundException("Email not found"));
     Field[] fields = dto.getClass().getDeclaredFields();
@@ -85,5 +89,6 @@ public class PetOwnerService {
       }
     }
     repository.save(petOwner);
+    return modelmapper.map(petOwner,VisibilityRequestDto.class);
   }
 }
