@@ -30,7 +30,11 @@ import lombok.AllArgsConstructor;
 public class CommunityController {
   private final CommunityService communityService;
   private final CommunityUserService communityUserService;
-  //task1
+  // CommunityController(CommunityService communityService, CommunityUserService communityUserService){
+  //   this.communityService = communityService;
+  //   this.communityUserService = communityUserService;
+  // }
+  //task1: Obtener todas las comunidades
   @GetMapping
   public ResponseEntity<List<CommunityResponseDTO>> getAllCommunities(){
     List<CommunityResponseDTO> communities = communityService.getAllCommunities();
@@ -42,7 +46,7 @@ public class CommunityController {
     CommunityResponseDTO community = communityService.getCommunityByName(name);
     return new ResponseEntity<>(community, HttpStatus.OK);
   }
-  //task2
+  //task2: Crear usuario de comunidad
   @PostMapping("/{id}/community-user")
   public ResponseEntity<CommunityUserResponseDTO> createCommunityUser(
     @PathVariable Long id, @Validated @RequestBody CommunityUserRequestDTO communityUserRequestDTO
@@ -50,13 +54,22 @@ public class CommunityController {
     CommunityUserResponseDTO createdCommunityUser = communityUserService.createCommunityUser(id, communityUserRequestDTO);
     return new ResponseEntity<>(createdCommunityUser, HttpStatus.CREATED);
   }
-  //task3
+  //task3: Crear comunidad
   @PostMapping
   public ResponseEntity<CommunityResponseDTO> createCommunity(
     @Validated @RequestBody CommunityRequestDTO communityRequestDTO){
     CommunityResponseDTO createdCommunity = communityService.createCommunity(communityRequestDTO);
     return new ResponseEntity<>(createdCommunity, HttpStatus.CREATED);
   }
+
+
+
+
+
+
+
+
+
   @DeleteMapping("/{id}")
   public ResponseEntity<CommunityResponseDTO> deleteCommunity(@PathVariable Long id){
     communityService.deleteCommunity(id);

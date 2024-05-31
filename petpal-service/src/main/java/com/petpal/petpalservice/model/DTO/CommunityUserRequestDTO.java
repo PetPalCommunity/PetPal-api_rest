@@ -10,8 +10,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommunityUserRequestDTO {
-    @NotBlank(message = "Debe tener un rol")
-    private String role;
-    @NotNull
-    private String userName;
+  @NotBlank(message = "Debe tener un rol")
+  private String role;
+  @NotNull
+  private String userName;
+  public String getRole() {
+    return role;
+  }
+  public void setRole(String role) {
+    this.role = role;
+  }
+  public String getUserName() {
+    return userName;
+  }
+  public void setUserName(String userName) {
+    this.userName = userName;
+  }
 }

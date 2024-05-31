@@ -25,7 +25,7 @@ public class Community {
   @Column(name = "description")
   private String description;
   @Column(name = "count_followers")
-  private Long countFollowers;
+  private Long countFollowers = 0L;
   @Column(name = "tags")
   List<String> tags;
   @Column(name="creation_date")

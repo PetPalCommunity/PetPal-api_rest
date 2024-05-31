@@ -27,7 +27,7 @@ public class CommunityUserService {
   public CommunityUserResponseDTO createCommunityUser(Long id, CommunityUserRequestDTO communityUserRequestDTO){
     CommunityUser communityUser =  communityUserMapper.convertToEntity(communityUserRequestDTO);
     Community community = communityRepository.findById(id)
-    .orElseThrow(() -> new ResourceNotFoundException("No existe una comunidad con dicho id"));
+    .orElseThrow(() -> new ResourceNotFoundException("No existe una comunidad con dicho id: " + id));
     community.setCountFollowers(community.getCountFollowers() + 1);
     community.getCommunityUsers().add(communityUser);
     communityRepository.save(community);

@@ -29,7 +29,7 @@ public class CommunityService {
   @Transactional(readOnly = true)
   public CommunityResponseDTO getCommunityByName(String name){
     Community community = communityRepository.findCommunityByName(name)
-    .orElseThrow(() -> new ResourceNotFoundException("No existe una comunidad con dicho nombre"));
+    .orElseThrow(() -> new ResourceNotFoundException("No existe una comunidad con el nombre "+name));
     return communityMapper.convertToDTO(community);
   }
   //task 3 crear comunidad
