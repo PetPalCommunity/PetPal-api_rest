@@ -50,14 +50,9 @@ public class MedicalRecordService{
             throw new NotFoundException("Pet not found");
         }
 
-        Date originalDate = dto.getDate();
-        LocalDate localDate = originalDate.toLocalDate();
-        LocalDate nextDay = localDate.plusDays(1);
-        Date nextDayDate = java.sql.Date.valueOf(nextDay);
-
         MedicalRecord medicalRecord = new MedicalRecord();
         medicalRecord.setPet(optionalPet.get());
-        medicalRecord.setDate(nextDayDate);
+        medicalRecord.setDate(dto.getDate());
         medicalRecord.setKind(dto.getKind());
         medicalRecord.setDescription(dto.getDescription());
         return medicalRecordRepository.save(medicalRecord);

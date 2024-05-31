@@ -32,4 +32,10 @@ public class MedicalRecordController{
         List<MedicalRecordResponseDto> records = service.getMedicalRecordsByDate(date);
         return new ResponseEntity<>(records, HttpStatus.OK);
     }
+
+    @GetMapping("/viewAllRecords")
+    public ResponseEntity<List<MedicalRecordResponseDto>> getRecords(){
+        List<MedicalRecordResponseDto> records = service.getMedicalRecords();
+        return new ResponseEntity<>(records, HttpStatus.OK);
+    }
 }
