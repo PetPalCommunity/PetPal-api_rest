@@ -39,7 +39,7 @@ public class CommunityService {
     community.setCreationDate(LocalDate.now());
     community.setCountFollowers(0L);
     community.setCommunityUsers(Collections.emptyList());
-    communityRepository.save(community);
+    community = communityRepository.save(community);
     return communityMapper.convertToDTO(community);
   }
 

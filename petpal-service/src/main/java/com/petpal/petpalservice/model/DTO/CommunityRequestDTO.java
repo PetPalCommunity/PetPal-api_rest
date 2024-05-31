@@ -11,11 +11,12 @@ import java.util.List;
 @NoArgsConstructor
 public class CommunityRequestDTO {
   @NotBlank(message = "Ingresa un nombre")
-  private String name;
+  private String name = "";
   @NotBlank(message = "Ingresa una descripcion")
-  private String description;
+  private String description = "";
 
-  private List<String> tags;
+  //set tags to empty list
+  private List<String> tags = List.of();
 
 
   public List<String> getTags() {
