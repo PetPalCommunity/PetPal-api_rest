@@ -40,7 +40,7 @@ public class PetOwnerController {
     PetOwner validated = service.validateSignIn(dto);
     return ResponseEntity.ok(validated);
   }
-  @GetMapping("/personalinfo")
+  @PatchMapping("/personalinfo")
   public ResponseEntity<PetOwnerResponseDto> updatePersonalInfo(@RequestBody PersonalInfoDto dto, @RequestParam String email) {
     PetOwnerResponseDto petOwnerResponseDto = service.updatePersonalInfo(dto, email);
     return ResponseEntity.ok(petOwnerResponseDto);
@@ -50,9 +50,9 @@ public class PetOwnerController {
   public ResponseEntity<PetOwnerResponseDto> upload(@RequestParam("file") MultipartFile multipartFile, @RequestParam("email") String email) {
     String path = storageService.store(multipartFile);
     PetOwnerResponseDto response = service.updateProfilePicture(email, path);
-    // return new UploadMediaResponse(path);
     return ResponseEntity.ok(response);
   }
+  // return new UploadMediaResponse(path);
 
   @GetMapping("/{filename}")
   public ResponseEntity<Resource> getResource(@PathVariable String filename) throws IOException {

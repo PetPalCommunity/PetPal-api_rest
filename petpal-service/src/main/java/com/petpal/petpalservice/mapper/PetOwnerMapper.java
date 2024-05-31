@@ -17,7 +17,10 @@ public class PetOwnerMapper {
   public PetOwnerMapper(ModelMapper modelMapper) {
     this.modelMapper = modelMapper;
   }
-  public static PetOwner dtoToEntity(PetOwnerRequestDto dto) {
+  public PetOwnerMapper() {
+    this.modelMapper = new ModelMapper();
+  }
+public static PetOwner dtoToEntity(PetOwnerRequestDto dto) {
     PetOwner petOwner = new PetOwner();
     petOwner.setOwnerName(dto.getOwnerName());
     petOwner.setOwnerAge(dto.getOwnerAge());
