@@ -19,7 +19,17 @@ public class CommunityResponseDTO {
   private List<String> tags;
   private LocalDate creationDate;
   private List<CommunityUserResponseDTO> communityUsers;
-  public Long getId() {
+  public CommunityResponseDTO(Long id2, String name2, String description2, List<String> tags2, LocalDate creationDate2,
+		List<CommunityUserResponseDTO> communityUsers2) {
+    this.id = id2;
+    this.name = name2;
+    this.description = description2;
+    this.tags = tags2;
+    this.creationDate = creationDate2;
+    this.communityUsers = communityUsers2;
+
+}
+public Long getId() {
     return id;
   }
   public void setId(Long id) {
