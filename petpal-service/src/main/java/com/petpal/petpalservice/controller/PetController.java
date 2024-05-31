@@ -88,4 +88,14 @@ public class PetController {
         ReminderResponseDto updatedReminder = service.updateReminder(petId,id, reminderDTO);
         return new ResponseEntity<>(updatedReminder, HttpStatus.OK);
     }
+
+    @PostMapping("/reminders/sendEmail")
+    public ResponseEntity<String> sendEmailReminder(@RequestParam int idPet,
+                                                @RequestParam String date,
+                                                @RequestParam String time) {
+        service.sendReminder(idPet,date,time);
+        return new ResponseEntity<>("Correo enviado", HttpStatus.OK);
+    }
+    
+
 }

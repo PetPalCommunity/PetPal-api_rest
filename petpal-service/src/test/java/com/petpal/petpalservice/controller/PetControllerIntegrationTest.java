@@ -24,6 +24,7 @@ import java.util.Set;
 public class PetControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
+
     @Test
     public void testCreatePet() throws Exception {
         PetRequestDto petRequestDto = new PetRequestDto();
@@ -128,6 +129,15 @@ public class PetControllerIntegrationTest {
                 .content(asJsonString(reminderRequestDto)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
+    }
+
+    @Test
+    public void testSendEmail() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/pets/reminders/sendEmail") 
+                                                .param("idPet", "2")
+                                                .param("date", "2024-05-30")
+                                                .param("time", "18:30:00"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     private String asJsonString(final Object obj) {

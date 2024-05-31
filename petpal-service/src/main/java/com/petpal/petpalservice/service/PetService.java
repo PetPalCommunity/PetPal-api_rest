@@ -17,6 +17,7 @@ import com.petpal.petpalservice.model.dto.ReminderRequestDto;
 import com.petpal.petpalservice.model.dto.ReminderResponseDto;
 import com.petpal.petpalservice.model.dto.ReminderUpdateRequestDto;
 import com.petpal.petpalservice.model.entity.Reminder;
+import com.petpal.petpalservice.service.EmailSenderService;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
@@ -37,6 +38,7 @@ public class PetService {
     private final PetOwnerRepository PetOwnerRepository;
     private final ReminderRepository reminderRepository;
     private final PetMapper mapper;
+    private final EmailSenderService emailService;
 
     @Transactional
     public PetResponseDto createPet(PetRequestDto dto) {
@@ -160,6 +162,32 @@ public class PetService {
         Reminder reminder = reminderRepository.findByPetIdAndReminderId(idPet, idReminder)
                     .orElseThrow(()-> new ResourceNotFoundException("El recordatorio con el id "+idReminder+" no pertenece a la mascota con el id "+idPet));
         reminderRepository.delete(reminder);
+    }
+
+    @Transactional
+    public void sendReminder(int idPet,String date,String time) {
+        Pet pet = petRepository.findById(idPet)
+                    .orElseThrow(()-> new ResourceNotFoundException("La mascota con el id "+idPet+" no existe"));
+        PetOwner owner = pet.getPetOwner();
+        Set<Reminder> reminders = pet.getReminders();
+        LocalDate currentDate = LocalDate.parse(date);
+        LocalTime currentTime = LocalTime.parse(time);
+        
+        for(Reminder reminder: reminders){
+            
+            if(reminder.getNextReminderDate().equals(currentDate) &&  LocalTime.parse(reminder.getReminderTime()).equals(currentTime)){
+                String to = owner.getOwnerEmail();
+                String subject = "Recordatorio de "+reminder.getReminderName();
+                String text = "Recordatorio de "+reminder.getReminderName()+" para tu mascota "+pet.getPetName()+" \n ";
+                emailService.sendEmail(to, subject, text);
+                LocalDate nextReminderDate = currentDate;
+                do{
+                    nextReminderDate = nextReminderDate.plusDays(1);
+                }while(!reminder.getDays().contains(nextReminderDate.getDayOfWeek()));
+                reminder.setNextReminderDate(nextReminderDate);
+                reminderRepository.save(reminder);
+            }
+        }
     }
 
 }

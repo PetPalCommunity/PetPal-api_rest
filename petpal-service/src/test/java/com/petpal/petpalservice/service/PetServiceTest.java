@@ -24,6 +24,8 @@ import com.petpal.petpalservice.repository.ReminderRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import java.time.DayOfWeek;
@@ -53,6 +55,9 @@ public class PetServiceTest {
 
     @InjectMocks
     private PetService petService;
+
+    @Mock
+    private EmailSenderService emailService;
 
     @Test
     void testCreatePet() {
@@ -618,4 +623,53 @@ public class PetServiceTest {
         verify(petRepository, never()).save(pet);
     }
 
+    @Test
+    void sendEmailReminderSuccessfully(){
+        //Arrange
+        int petId = 1;
+        String date = "2024-05-30";
+        String time = "12:00:00";
+
+
+        PetOwner owner = new PetOwner();
+        owner.setOwnerEmail("example@example.com");
+
+        Pet pet = new Pet();
+        pet.setPetName("Firulais");
+        pet.setPetOwner(owner);
+        pet.setReminders(new HashSet<>());
+
+        Reminder reminder = new Reminder();
+        reminder.setNextReminderDate(LocalDate.parse(date));
+        reminder.setReminderTime(LocalTime.parse(time));
+        reminder.setDays(Set.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY));
+
+        pet.getReminders().add(reminder);
+
+        when(petRepository.findById(petId)).thenReturn(Optional.of(pet));
+        when(reminderRepository.save(any(Reminder.class))).thenReturn(reminder);
+
+        // Act
+        assertDoesNotThrow(() -> petService.sendReminder(petId, date, time));
+
+        // Assert
+        verify(emailService, times(1)).sendEmail(eq("example@example.com"), anyString(), anyString());
+    }
+
+    @Test
+    void sendEmailReminder_NotFoundPetId(){
+        //Arrange
+        int petId = 1;
+        String date = "2024-05-30";
+        String time = "12:00:00";
+
+        // Configuramos el mock de petRepository
+        when(petRepository.findById(petId)).thenReturn(Optional.empty());
+
+        // Act
+        assertThrows(ResourceNotFoundException.class, () -> petService.sendReminder(petId, date, time));
+
+        // Assert
+        verify(emailService, never()).sendEmail(anyString(), anyString(), anyString());
+    }
 }
